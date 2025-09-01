@@ -1,112 +1,76 @@
-import {Link, NavLink} from "react-router-dom";
-import { BsCart3 } from "react-icons/bs";
-import { GiHamburgerMenu } from "react-icons/gi";
+import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
-import { useState } from "react";
+import { BsCart3 } from "react-icons/bs";
+import { AiOutlineHeart } from "react-icons/ai";
+import { RxAvatar } from "react-icons/rx";
+import { TbArrowsShuffle } from "react-icons/tb";
 
 export default function Header() {
-    const [sideDrawerOpened, setSideDrawerOpened] = useState(false);
+  return (
+    <header className="w-full border-b border-gray-200 text-gray-700">
 
-    return (
-        <header className="w-full h-[65px] shadow-md flex items-center justify-between px-4 bg-[#0b2f00] text-white relative font-light">
+      {/* 🔹 Main Header */}
+      <div className="flex items-center justify-between py-4 px-6 bg-white">
+        {/* Logo */}
+        <Link to="/">
+          <img src="/logo.svg" alt="logo" className="h-12" />
+        </Link>
 
-            <div className="flex items-center gap-4">
-                <GiHamburgerMenu
-                    className="text-3xl md:hidden cursor-pointer"
-                    onClick={() => setSideDrawerOpened(true)}
-                />
-                <img
-                    src="/logo.svg"
-                    alt="logo"
-                    className="h-11 object-cover cursor-pointer"
-                />
+        {/* Search bar */}
+        <form className="flex w-[50%] border border-green-500 rounded-lg overflow-hidden">
+          <input
+            type="text"
+            placeholder="Search for products..."
+            className="flex-grow px-3 py-2 outline-none"
+          />
+          <button
+            type="submit"
+            className="bg-green-500 px-6 text-white hover:bg-green-600"
+          >
+            Search
+          </button>
+        </form>
+
+        {/* Right Side */}
+        <div className="flex items-center gap-6">
+          <Link to="/cart" className="relative flex items-center gap-1 hover:text-green-600">
+            <BsCart3 size={22} /> Cart
+            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-1 rounded-full">
+              0
+            </span>
+          </Link>
+          <Link to="/account" className="flex items-center gap-1 hover:text-green-600">
+            <RxAvatar size={22} /> Account
+          </Link>
+        </div>
+      </div>
+
+      {/* 🔹 Bottom Nav + Top Strip combined */}
+        <div className="w-full border-t border-gray-200 bg-white">
+        <div className="flex items-center justify-between px-6 py-3 text-gray-800 text-[15px]">
+
+            {/* Left side: Navigation */}
+            <div className="flex items-center gap-8">
+            <button className="bg-green-600 text-white px-4 py-2 rounded-md">
+                Browse All Categories
+            </button>
+            <Link to="/deals" className="hover:text-green-600">Hot Deals</Link>
+            <Link to="/" className="text-green-600 font-medium">Home</Link>
+            <Link to="/about" className="hover:text-green-600">About</Link>
+            <Link to="/shop" className="hover:text-green-600">Shop</Link>
+            <Link to="/contact" className="hover:text-green-600">Contact</Link>
             </div>
 
-
-            <nav className="hidden md:flex items-center gap-6 text-lg">
-                <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                        isActive ? "text-[#ffdd55] " : "hover:text-green-400"}>Home</NavLink>
-
-                <NavLink to="/products"
-                    className={({ isActive }) =>
-                        isActive ? "text-[#ffdd55] " : "hover:text-green-400"}>BuyNest Products</NavLink>
-
-                <NavLink to="/about" className={({ isActive }) =>
-                        isActive ? "text-[#ffdd55] " : "hover:text-green-400"}>About Us</NavLink>
-
-                <NavLink to="/contact" className={({ isActive }) =>
-                        isActive ? "text-[#ffdd55] " : "hover:text-green-400"}>Contact Us</NavLink>
-
-
-                <form className="flex items-center bg-[#ffdd55] rounded-[10px] overflow-hidden ml-4 font-light">
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="px-2 py-1 text-black outline-none w-35"
-                    />
-                    <button
-                        type="submit"
-                        className="px-2 text-gray-700 hover:text-green-600"
-                        aria-label="Search"
-                    >
-                        <FiSearch size={22} />
-                    </button>
-                </form>
-            </nav>
-
-
-            <div className="hidden md:flex items-center">
-                <Link to="/cart" className="text-2xl text-white hover:text-green-400">
-                    <BsCart3 />
-                </Link>
+            {/* Right side: Top Strip content */}
+            <div className="flex gap-6 items-center text-sm">
+            <Link to="/contact" className="hover:text-green-600">Track My Order</Link>
+            <p className="text-green-600 font-medium">
+                Need help? Call Us: <span className="font-semibold">1800900122</span>
+            </p>
             </div>
+        </div>
+        </div>
 
-
-            {sideDrawerOpened && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-                    <div className="w-[250px] h-full bg-white text-black p-4 flex flex-col gap-4">
-
-                        <div className="flex items-center justify-between mb-6">
-                            <img
-                                src="/logo.svg"
-                                alt="logo"
-                                className="w-10 h-10 object-cover w-fit "
-                            />
-                            <GiHamburgerMenu
-                                className="text-2xl cursor-pointer"
-                                onClick={() => setSideDrawerOpened(false)}
-                            />
-                        </div>
-
-
-                        <a href="/" className="hover:text-green-600">Home</a>
-                        <a href="/products" className="hover:text-green-600">Products</a>
-                        <a href="/about" className="hover:text-green-600">About</a>
-                        <a href="/contact" className="hover:text-green-600">Contact</a>
-                        <a href="/cart" className="text-2xl mt-2">
-                            <BsCart3 />
-                        </a>
-
-
-                        <form className="mt-4 flex items-center border border-gray-300 rounded-md overflow-hidden">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="flex-grow px-2 py-1 outline-none"
-                            />
-                            <button
-                                type="submit"
-                                className="px-2 text-gray-700 hover:text-green-600"
-                                aria-label="Search"
-                            >
-                                <FiSearch size={20} />
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </header>
-    );
+    </header>
+  );
 }
