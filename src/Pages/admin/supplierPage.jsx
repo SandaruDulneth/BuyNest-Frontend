@@ -1,0 +1,159 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { FaEdit, FaTrash } from "react-icons/fa";
+
+export default function AdminSupplierPage() {
+    const [suppliers, setSuppliers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
+
+
+    const fmt = useMemo(
+        () =>
+            new Intl.NumberFormat("en-LK", {
+                style: "currency",
+                currency: "LKR",
+                maximumFractionDigits: 2,
+            }),
+        []
+    );
+
+    useEffect(() => {
+        if (!isLoading) return;
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            toast.error("Please login first");
+            setIsLoading(false);
+            return;
+        }
+
+        axios
+            .get("http://localhost:5000/api/suppliers", {
+                headers: { Authorization: "Bearer " + token },
+            })
+            .then((res) => {
+                setSuppliers(Array.isArray(res.data) ? res.data : []);
+                setIsLoading(false);
+            })
+            .catch((e) => {
+                toast.error(e.response?.data?.message || "Failed to load suppliers");
+                setSuppliers([]);
+                setIsLoading(false);
+            });
+    }, [isLoading]);
+
+    function deleteSupplier (supplierId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            toast.error("Please login first");
+            return;
+        }
+        axios
+            .delete("http://localhost:5000/api/suppliers/" + supplierId, {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            })
+            .then(() => {
+                toast.success("Supplier deleted successfully");
+                setIsLoading(true);
+            })
+            .catch((e) => {
+                toast.error(e.response?.data?.message || "Failed to delete Supplier");
+            });
+    }
+
+    return (
+        <div className="relative w-full h-full max-h-full overflow-y-auto p-4 font-[var(--font-main)]">
+            <Link
+                to="/admin/add-suppliers"
+                className="fixed bottom-6 right-6 bg-[var(--color-accent)] hover:bg-[var(--color-secondary)] text-white font-bold py-3 px-5 rounded-full shadow-lg transition duration-300"
+            >
+                + Add Supplier
+            </Link>
+
+            {isLoading ? (
+                <div className="w-full h-full flex justify-center items-center">
+                    <div className="w-16 h-16 border-4 border-gray-300 border-t-[var(--color-accent)] rounded-full animate-spin"></div>
+                </div>
+            ) : (
+                <div className="overflow-x-auto">
+                    <table className="w-full text-center border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                        <thead className="bg-[var(--color-accent)] text-white">
+                        <tr>
+                            <th className="py-3 px-2">Supplier ID</th>
+                            <th className="py-3 px-2">Name</th>
+                            <th className="py-3 px-2">Email</th>
+                            <th className="py-3 px-2">Product ID</th>
+                            <th className="py-3 px-2">Stock</th>
+                            <th className="py-3 px-2">Cost</th>
+                            <th className="py-3 px-2">Contact No</th>
+                            <th className="py-3 px-2">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {suppliers.map((s, index) => {
+                            const key = s.supplierId || s._id || index;
+                            return (
+                                <tr
+                                    key={key}
+                                    className={`${
+                                        index % 2 === 0
+                                            ? "bg-[var(--color-primary)]"
+                                            : "bg-gray-100"
+                                    } hover:bg-gray-200 transition`}
+                                >
+                                    <td className="py-2 px-2">{s.supplierId}</td>
+                                    <td className="py-2 px-2">{s.Name || "-"}</td>
+                                    <td className="py-2 px-2">{s.email || "-"}</td>
+                                    <td className="py-2 px-2">{s.productId || "-"}</td>
+                                    <td className="py-2 px-2">{Number(s.stock) ?? 0}</td>
+                                    <td className="py-2 px-2">
+                                        {typeof s.cost === "number" ? fmt.format(s.cost) : "-"}
+                                    </td>
+                                    <td className="py-2 px-2">{s.contactNo || "-"}</td>
+
+                                    <td className="py-2 px-2">
+                                        <div className="flex justify-center items-center gap-3">
+                                            <button
+                                                onClick={() =>
+                                                    navigate("/admin/edit-suppliers", { state: s })
+                                                }
+                                                className="text-blue-500 hover:text-blue-700 transition"
+                                                title="Edit"
+                                            >
+                                                <FaEdit size={18} />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    deleteSupplier(s.supplierId)
+                                                }
+                                                className="text-red-500 hover:text-red-700 transition"
+                                                title="Delete"
+                                            >
+                                                <FaTrash size={18} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+
+                        {suppliers.length === 0 && (
+                            <tr>
+                                <td className="py-6 px-2 text-gray-500 italic" colSpan={8}>
+                                    No suppliers found.
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
+}

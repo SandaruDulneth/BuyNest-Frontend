@@ -3,4 +3,8 @@
 
 @theme{
     --font-light: "Raleway", sans-serif;
+    --color-primary:#FBFBFB;
+    --color-secondary:#393E46;
+    --color-accent: #1e9800;
+    --color-third: #77f800;
 }

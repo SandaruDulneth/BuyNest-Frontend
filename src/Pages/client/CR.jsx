@@ -2,6 +2,7 @@ import {Route, Routes} from "react-router-dom";
 import HomePage from "./home.jsx";
 import Header from "../../components/header.jsx";
 
+
 export default function CR() {
     return (
         <div className="w-full h-screen flex flex-col overflow-hidden">

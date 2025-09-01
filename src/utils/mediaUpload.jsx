@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js"
 
-const url = "https://httdojowfqvljyeysmgo.supabase.co"
-const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0dGRvam93ZnF2bGp5ZXlzbWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxMjc3ODAsImV4cCI6MjA2NzcwMzc4MH0.U5gyD2oKT_RUpeZnfMnw-Bm7mA0acIAH6aJ_ZD2CyQg"
+const url = "https://zysukkwbipelvzluayki.supabase.co"
+const key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5c3Vra3diaXBlbHZ6bHVheWtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MDk0OTQsImV4cCI6MjA3MjI4NTQ5NH0.bBufV7qUXfqdImGjLoowhM0RYvilhIk2k75wvFhRJ1c"
 
 const supabase = createClient(url,key)
 
@@ -18,11 +18,11 @@ export default function mediaUpload(file){
             const timestamp = new Date().getTime()
             const newName = timestamp+file.name
 
-            supabase.storage.from("products").upload(newName, file, {
+            supabase.storage.from("buynest").upload(newName, file, {
                 upsert:false,
                 cacheControl:"3600"
             }).then(()=>{
-                const publicUrl = supabase.storage.from("products").getPublicUrl(newName).data.publicUrl
+                const publicUrl = supabase.storage.from("buynest").getPublicUrl(newName).data.publicUrl
                 resolve(publicUrl)
             }).catch(
                 ()=>{
