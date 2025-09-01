@@ -1,6 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import HomePage from "./home.jsx";
 import Header from "../../components/header.jsx";
+import Test from "./test.jsx";
 
 export default function CR() {
   return (
@@ -9,6 +10,7 @@ export default function CR() {
       <div className="w-full flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
+            <Route path="/test" element={<Test/>} />
           <Route path="/*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>

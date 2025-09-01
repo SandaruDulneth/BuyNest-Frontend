@@ -17,7 +17,7 @@ export default function Header() {
         </Link>
 
         {/* Search bar */}
-        <form className="flex w-[50%] border border-green-500 rounded-lg overflow-hidden">
+        <form className="flex w-[50%] border border-accent rounded-lg overflow-hidden">
           <input
             type="text"
             placeholder="Search for products..."
@@ -25,7 +25,7 @@ export default function Header() {
           />
           <button
             type="submit"
-            className="bg-green-500 px-6 text-white hover:bg-green-600"
+            className="bg-accent px-6 text-white hover:bg-green-600"
           >
             Search
           </button>
@@ -35,11 +35,11 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <Link to="/cart" className="relative flex items-center gap-1 hover:text-green-600">
             <BsCart3 size={22} /> Cart
-            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-1 rounded-full">
+            <span className="absolute -top-2 -right-2 bg-accent text-white text-xs px-1 rounded-full">
               0
             </span>
           </Link>
-          <Link to="/account" className="flex items-center gap-1 hover:text-green-600">
+          <Link to="/account" className="flex items-center gap-1 hover:text-accent">
             <RxAvatar size={22} /> Account
           </Link>
         </div>
@@ -51,11 +51,11 @@ export default function Header() {
 
             {/* Left side: Navigation */}
             <div className="flex items-center gap-8">
-            <button className="bg-green-600 text-white px-4 py-2 rounded-md">
+            <button className="bg-accent text-white px-4 py-2 rounded-md">
                 Browse All Categories
             </button>
             <Link to="/deals" className="hover:text-green-600">Hot Deals</Link>
-            <Link to="/" className="text-green-600 font-medium">Home</Link>
+            <Link to="/" className="text-accent font-medium">Home</Link>
             <Link to="/about" className="hover:text-green-600">About</Link>
             <Link to="/shop" className="hover:text-green-600">Shop</Link>
             <Link to="/contact" className="hover:text-green-600">Contact</Link>
@@ -64,7 +64,7 @@ export default function Header() {
             {/* Right side: Top Strip content */}
             <div className="flex gap-6 items-center text-sm">
             <Link to="/contact" className="hover:text-green-600">Track My Order</Link>
-            <p className="text-green-600 font-medium">
+            <p className="text-accent font-medium">
                 Need help? Call Us: <span className="font-semibold">1800900122</span>
             </p>
             </div>
