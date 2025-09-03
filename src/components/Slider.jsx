@@ -1,119 +1,47 @@
-import React, { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
-import { motion, AnimatePresence } from "framer-motion";
-import "swiper/css";
-import "swiper/css/pagination";
+import { useState, useEffect } from "react";
 
-const slides = [
-    {
-        image: "/images/slide1.jpg",
-        title: "Bringing you the best products from around the world at the best prices",
-    },
-    {
-        image: "/images/slide2.jpg",
-        title: "Fresh & Quality Everyday Essentials",
-    },
-    {
-        image: "/images/slide3.jpg",
-        title: "Unbeatable Value, Great Choices",
-    },
-    {
-        image: "/images/slide4.jpg",
-        title: "Save More, Live Better",
-    },
-];
+export default function Slider() {
+  const images = [
+    "/images/slider5.jpg",
+    "/images/slider2.jpg",
+    "/images/slider4.jpg",
+  ];
 
-const BannerSlider = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
 
-    const textVariants = {
-        hidden: { opacity: 0, y: 60 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.6,
-                ease: "easeOut"
-            }
-        },
-        exit: {
-            opacity: 0,
-            y: -50,
-            transition: {
-                duration: 0.4,
-                ease: "easeIn"
-            }
-        }
-    };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
-    const buttonVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                delay: 0.3,
-                duration: 0.6,
-                ease: "easeOut"
-            }
-        }
-    };
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-3xl">
+      {images.map((img, idx) => (
+        <img
+          key={idx}
+          src={img}
+          alt={`slide-${idx}`}
+          className={`absolute inset-x-0 top-1/2 w-full h-full -translate-y-1/2 
+            object-cover transition-opacity duration-1000 ${
+              idx === current ? "opacity-100" : "opacity-0"
+            }`}
+        />
+      ))}
 
-    return (
-        <div className="w-full h-screen overflow-hidden">
-            <Swiper
-                modules={[Pagination, Autoplay]}
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 3500, disableOnInteraction: false }}
-                speed={1000}
-                loop
-                className="w-full h-full"
-                onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            >
-                {slides.map((slide, index) => (
-                    <SwiperSlide key={index}>
-                        <div
-                            className="w-full h-screen bg-cover bg-center relative flex items-center justify-center"
-                            style={{ backgroundImage: `url(${slide.image})` }}
-                        >
-                            {/* Blurred Dark Overlay */}
-                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-10" />
-
-                            {/* Centered Content with Animation */}
-                            <div className="z-20 text-white text-center px-6">
-                                <AnimatePresence mode="wait">
-                                    {activeIndex === index && (
-                                        <>
-                                            <motion.h2
-                                                key={`title-${index}`}
-                                                initial="hidden"
-                                                animate="visible"
-                                                exit="exit"
-                                                variants={textVariants}
-                                                className="text-3xl md:text-5xl font-bold max-w-4xl mx-auto"
-                                            >
-                                                {slide.title}
-                                            </motion.h2>
-                                            <motion.div
-                                                initial="hidden"
-                                                animate="visible"
-                                                variants={buttonVariants}
-                                            >
-                                                <button className="mt-6 px-6 py-2 bg-white text-green-800 font-semibold rounded-lg shadow hover:bg-green-200 transition">
-                                                    Shop Now
-                                                </button>
-                                            </motion.div>
-                                        </>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
-    );
-};
-
-export default BannerSlider;
+      {/* Dots */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+        {images.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrent(idx)}
+            className={`h-2 w-2 rounded-full ${
+              idx === current ? "bg-emerald-600" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
