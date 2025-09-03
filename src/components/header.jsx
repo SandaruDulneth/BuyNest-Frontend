@@ -63,7 +63,6 @@ export default function Header() {
 
             {/* Right side: Top Strip content */}
             <div className="flex gap-6 items-center text-sm">
-            <Link to="/contact" className="hover:text-green-600">Track My Order</Link>
             <p className="text-accent font-medium">
                 Need help? Call Us: <span className="font-semibold">1800900122</span>
             </p>
