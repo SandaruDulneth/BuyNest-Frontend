@@ -193,20 +193,20 @@ export default function AdminPage() {
           width: 10px;
         }
         .scrollbar-light::-webkit-scrollbar-track {
-          background: #0f172a; /* slate-900 */
+          background: #064e3b; /* slate-900 */
         }
         .scrollbar-light::-webkit-scrollbar-thumb {
-          background-color: #334155; /* slate-700 */
+          background-color: #10b981; /* slate-700 */
           border-radius: 9999px;
           border: 2px solid #0f172a; /* match track (sidebar bg) */
         }
         .scrollbar-light::-webkit-scrollbar-thumb:hover {
-          background-color: #475569; /* slate-600 */
+          background-color: #34d399; /* slate-600 */
         }
         /* Firefox */
         .scrollbar-dark {
           scrollbar-width: thin;
-          scrollbar-color: #334155 #0f172a; /* thumb track */
+          scrollbar-color: #10b981 #064e3b; /* thumb track */
         }
       `}</style>
         </div>
