@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "./ProductCard"; // keep for default
 
-export default function ProductsByCategory({ category, apiBase = "http://localhost:5000" }) {
+export default function ProductsByCategory({
+  category,
+  apiBase = "http://localhost:5000",
+  CardComponent = ProductCard, // 👈 default to old ProductCard
+}) {
   const [products, setProducts] = useState([]);
   const [state, setState] = useState({ loading: true, error: null });
 
@@ -59,7 +63,7 @@ export default function ProductsByCategory({ category, apiBase = "http://localho
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
       {products.map((p) => (
-        <ProductCard
+        <CardComponent
           key={p._id || p.productId}
           product={p}
           onAddToCart={() => console.log("add to cart", p._id || p.productId)}

@@ -181,8 +181,6 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* FOOTER */}
-      <Footer />
     </>
   );
 }
