@@ -1,10 +1,10 @@
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import './App.css';
-import AdminPage from './Pages/admin/adminPage.jsx';
+import './App.css'
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import CR from "./Pages/client/CR.jsx";
-import LoginPage from './Pages/login.jsx';
-import RegisterPage from './Pages/register.jsx';
+import AdminPage from './Pages/admin/adminPage.jsx';
+import LoginPage from "./Pages/login.jsx";
+import RegisterPage from "./Pages/register.jsx";
 
 function App() {
 
