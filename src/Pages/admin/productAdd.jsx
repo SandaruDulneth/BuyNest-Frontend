@@ -18,7 +18,7 @@ export default function AddProductPage() {
 
   const navigate = useNavigate();
 
-  // Predefined categories (same list you had)
+
   const categoriesList = [
     "Fresh Fruits",
     "Meat & Fish",

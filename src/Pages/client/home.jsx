@@ -59,7 +59,7 @@ export default function HomePage() {
 
         {/* WIDE PROMO BANNER */}
         <section className="container mx-auto px-4 md:px-8 lg:px-12 mt-10">
-          <div className="relative rounded-3xl overflow-hidden bg-rose-50">
+          <div className="relative rounded-3xl overflow-hidden bg-[#f7d8d3]">
             <div className="absolute inset-0 bg-[url('/images/promo-texture.png')] opacity-20" />
 
             <div className="relative grid md:grid-cols-2 items-stretch">

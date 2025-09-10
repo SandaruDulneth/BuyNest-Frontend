@@ -66,7 +66,7 @@ export default function AdminPage() {
         </div>
     );
 
-    // NOTE: `icon` is a React element (e.g. <FiHome />)
+
     const Item = ({ to, icon, label, end = false }) => (
         <NavLink
             to={to}
@@ -88,7 +88,7 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            {/* Top bar (mobile) */}
+
             <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-slate-200 bg-white px-3 py-2 md:hidden">
                 <button
                     aria-label="Open menu"
@@ -100,7 +100,7 @@ export default function AdminPage() {
                 <div className="text-sm font-semibold text-slate-700">Admin Dashboard</div>
             </div>
 
-            {/* Fixed sidebar (desktop) */}
+
             <aside
                 className="
           hidden md:flex md:flex-col
@@ -111,15 +111,15 @@ export default function AdminPage() {
                 <SidebarContent me={me} loadingMe={loadingMe} />
             </aside>
 
-            {/* Drawer sidebar (mobile) */}
+
             {open && (
                 <div className="md:hidden">
-                    {/* dim background */}
+
                     <div
                         className="fixed inset-0 z-40 bg-black/40"
                         onClick={() => setOpen(false)}
                     />
-                    {/* panel */}
+
                     <div className="fixed inset-y-0 left-0 z-50 w-[85%] max-w-[320px] bg-slate-900 text-slate-200 border-r border-slate-800 flex flex-col">
                         <HeaderProfile me={me} loadingMe={loadingMe} onClose={() => setOpen(false)} />
                         {/* Nav list (mobile) */}
@@ -309,9 +309,9 @@ export default function AdminPage() {
                 <Item to="/admin/reviews" icon={<FiStar />} label="Reviews" />
                 <Item to="/admin/riders" icon={<FiTruck />} label="Riders" />
                 <Item to="/admin/faqs" icon={<FiHelpCircle />} label="FAQ Page" />
-                {/* Suppliers with icon in front (Contacts moved here) */}
+
                 <Item to="/admin/suppliers" icon={<FiFileText />} label="Suppliers" />
-                {/* NEW: Delivery right below Suppliers */}
+
                 <Item to="/admin/delivery" icon={<FiSend />} label="Delivery" />
 
                 <SectionTitle>Quick Actions</SectionTitle>

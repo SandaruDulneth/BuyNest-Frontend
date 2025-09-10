@@ -126,7 +126,7 @@ export default function AddFaqPage() {
     );
 }
 
-/* ------------- small input atoms ------------- */
+
 
 function Field({ label, value, onChange, placeholder, type = "text" }) {
     return (

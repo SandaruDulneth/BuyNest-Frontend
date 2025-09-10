@@ -215,7 +215,7 @@ export default function AdminReviewPage() {
     );
 }
 
-/* ---------------- Tiny UI atoms ---------------- */
+
 
 function KpiCard({ title, value }) {
     return (

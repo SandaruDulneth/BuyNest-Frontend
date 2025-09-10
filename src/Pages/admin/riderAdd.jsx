@@ -170,7 +170,7 @@ export default function AddRiderPage() {
     );
 }
 
-/* ---------------- small inputs ---------------- */
+
 
 function Field({ label, value, onChange, placeholder, type = "text" }) {
     return (

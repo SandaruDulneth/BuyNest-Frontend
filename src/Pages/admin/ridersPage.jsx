@@ -11,12 +11,12 @@ export default function AdminRiderPage() {
     const [fetchError, setFetchError] = useState("");
     const navigate = useNavigate();
 
-    // ------- filters -------
-    const [q, setQ] = useState("");              // search text
-    const [status, setStatus] = useState("all"); // all | active | inactive
-    const [vehicle, setVehicle] = useState("all"); // all or a type from data
 
-    // ------- pagination -------
+    const [q, setQ] = useState("");
+    const [status, setStatus] = useState("all");
+    const [vehicle, setVehicle] = useState("all");
+
+
     const PAGE_SIZE = 10;
     const [page, setPage] = useState(1);
 
@@ -67,7 +67,7 @@ export default function AdminRiderPage() {
             });
     }
 
-    // ---------- derived data ----------
+
     const { total, activeCount, inactiveCount } = useMemo(() => {
         const total = riders.length;
         const activeCount = riders.filter((r) => !!r.status).length;
@@ -75,7 +75,7 @@ export default function AdminRiderPage() {
         return { total, activeCount, inactiveCount };
     }, [riders]);
 
-    // distinct vehicle types for dropdown
+
     const vehicleOptions = useMemo(() => {
         const set = new Set(
             riders
@@ -85,7 +85,7 @@ export default function AdminRiderPage() {
         return ["all", ...Array.from(set)];
     }, [riders]);
 
-    // filter logic (name/email/id + status + vehicle)
+
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
         return riders.filter((r) => {
@@ -108,12 +108,12 @@ export default function AdminRiderPage() {
         });
     }, [riders, q, status, vehicle]);
 
-    // reset to page 1 whenever the filter set changes
+
     useEffect(() => {
         setPage(1);
     }, [q, status, vehicle, riders]);
 
-    // paginate filtered list
+
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const start = (page - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
@@ -130,7 +130,7 @@ export default function AdminRiderPage() {
 
     return (
         <div className="relative w-full h-full max-h-full overflow-y-auto p-4 font-[var(--font-main)]">
-            {/* Page header with action */}
+
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
