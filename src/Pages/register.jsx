@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate, Link } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaXTwitter } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
     const [firstName, setFirstName] = useState("");

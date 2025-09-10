@@ -110,10 +110,10 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="relative w-full h-full max-h-full overflow-y-auto p-6 bg-gray-50 font-[var(--font-main)]">
+    <div className="relative w-full h-full max-h-full overflow-y-auto p-6">
       {/* Page Title */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Product Inventory</h1>
+        <h1 className="text-3xl font-bold text-dgreen">Product Inventory</h1>
         <p className="text-gray-500 text-sm">
           Manage your product details, categories, pricing, and stock information.
         </p>
@@ -187,7 +187,7 @@ export default function ProductPage() {
 
         <Link
           to="/admin/add-product"
-          className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
+          className="bg-dgreen hover:bg-dgreen/80 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
         >
           + Add Product
         </Link>
@@ -201,16 +201,16 @@ export default function ProductPage() {
       ) : (
         <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <table className="min-w-full text-sm md:text-base">
-            <thead className="bg-slate-700 text-white">
+            <thead className="bg-slate-50 text-slate-600">
               <tr>
-                <th className="py-3 px-4 text-left">Product ID</th>
-                <th className="py-3 px-4 text-left">Name</th>
-                <th className="py-3 px-4 text-center">Image</th>
-                <th className="py-3 px-4 text-left">Categories</th>
-                <th className="py-3 px-4">Original Price</th>
-                <th className="py-3 px-4">Selling Price</th>
-                <th className="py-3 px-4">Stock</th>
-                <th className="py-3 px-4">Actions</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Product ID</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Name</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Image</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Categories</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Original Price</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Selling Price</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Stock</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
@@ -218,12 +218,12 @@ export default function ProductPage() {
                 currentProducts.map((item, index) => (
                   <tr
                     key={index}
-                    className="hover:bg-slate-50 transition duration-200"
+                    className="hover:bg-slate-50 transition duration-200 text-sm"
                   >
-                    <td className="py-3 px-4 font-medium text-slate-700">
+                    <td className="py-3 px-4 font-medium text-slate-700 text-sm">
                       {item.productId}
                     </td>
-                    <td className="py-3 px-4">{item.name}</td>
+                    <td className="py-3 px-4 text-sm">{item.name}</td>
                     <td className="py-3 px-4 text-center">
                       <img
                         src={item.images[0]}
@@ -231,7 +231,7 @@ export default function ProductPage() {
                         className="w-12 h-12 object-cover rounded-full shadow-sm"
                       />
                     </td>
-                    <td className="py-3 px-4 text-slate-600">
+                    <td className="py-3 px-4 text-slate-600 text-sm">
                       {item.categories?.join(", ")}
                     </td>
                     <td className="py-3 px-4 text-slate-700">
@@ -258,19 +258,20 @@ export default function ProductPage() {
                     <td className="py-3 px-4">
                       <div className="flex justify-center space-x-2">
                         <button
+                            onClick={() =>
+                                navigate("/admin/edit-product", { state: item })
+                            }
+                            className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
+                        >
+                          <FaEdit size={16} />
+                        </button>
+                        <button
                           onClick={() => deleteProduct(item.productId)}
                           className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 transition"
                         >
                           <FaTrash size={16} />
                         </button>
-                        <button
-                          onClick={() =>
-                            navigate("/admin/edit-product", { state: item })
-                          }
-                          className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
-                        >
-                          <FaEdit size={16} />
-                        </button>
+
                       </div>
                     </td>
                   </tr>
@@ -291,10 +292,10 @@ export default function ProductPage() {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
-                className={`px-4 py-2 rounded ${
+                className={`px-4 py-2 rounded-lg ${
                   currentPage === 1
                     ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                    : "bg-slate-700 text-white hover:bg-slate-800"
+                    : "bg-dgreen text-white hover:bg-dgreen/90"
                 }`}
               >
                 Previous
@@ -305,10 +306,10 @@ export default function ProductPage() {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className={`px-4 py-2 rounded ${
+                className={`px-4 py-2 rounded-lg ${
                   currentPage === totalPages
                     ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                    : "bg-slate-700 text-white hover:bg-slate-800"
+                    : "bg-dgreen text-white hover:bg-dgreen/90"
                 }`}
               >
                 Next

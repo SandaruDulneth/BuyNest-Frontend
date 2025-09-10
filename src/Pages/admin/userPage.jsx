@@ -152,10 +152,13 @@ export default function UserPage() {
     ).length;
 
     return (
-        <div className="relative w-full h-full max-h-full overflow-y-auto p-6 bg-gray-50 font-[var(--font-main)]">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        <div className="relative w-full h-full max-h-full overflow-y-auto p-6  font-[var(--font-main)]">
+            <h1 className="text-3xl font-bold text-dgreen  text-left mb-1">
                 User Management
             </h1>
+            <p className="text-sm text-slate-500 mb-5">
+                View, manage, and track customer orders
+            </p>
 
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -224,13 +227,12 @@ export default function UserPage() {
 
                 <Link
                     to="/admin/add-users"
-                    className="bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
+                    className="bg-dgreen hover:bg-dgreen/80 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
                 >
                     + Add User
                 </Link>
             </div>
 
-            {/* Table */}
             {isLoading ? (
                 <div className="w-full h-full flex justify-center items-center">
                     <div className="w-16 h-16 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin"></div>
@@ -238,14 +240,14 @@ export default function UserPage() {
             ) : (
                 <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                     <table className="min-w-full text-sm md:text-base">
-                        <thead className="bg-slate-700 text-white">
+                        <thead className="bg-slate-50 text-slate-600">
                         <tr>
-                            <th className="py-3 px-4 text-left">User ID</th>
-                            <th className="py-3 px-4 text-left">Name</th>
-                            <th className="py-3 px-4 text-left">Email</th>
-                            <th className="py-3 px-4 text-left">Role</th>
-                            <th className="py-3 px-4 text-left">Status</th>
-                            <th className="py-3 px-4 text-center">Actions</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercase text-left">User ID</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercaset text-left">Name</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Email</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Role</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercase text-left">Status</th>
+                            <th className="py-3 px-4 text-xs font-semibold uppercase text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200">

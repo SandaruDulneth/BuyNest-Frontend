@@ -74,7 +74,7 @@ export default function AdminReviewPage() {
         <div className="w-full h-full max-h-full overflow-y-auto p-4 md:p-6 font-[var(--font-main)]">
             {/* Header */}
             <div className="mb-5">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-800">
+                <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
                     Reviews Management
                 </h1>
                 <p className="text-sm text-slate-500">

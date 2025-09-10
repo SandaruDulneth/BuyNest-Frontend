@@ -57,7 +57,7 @@ export default function AddRiderPage() {
         <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6">
             {/* Title */}
             <div className="mx-auto max-w-3xl mb-4 text-center">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-800">
+                <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
                     Add New Rider
                 </h1>
                 <p className="text-sm text-slate-500 mt-1">
@@ -153,7 +153,7 @@ export default function AddRiderPage() {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] disabled:opacity-60"
+                        className="inline-flex items-center justify-center rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] disabled:opacity-60"
                     >
                         {submitting ? (
                             <span className="inline-flex items-center gap-2">
