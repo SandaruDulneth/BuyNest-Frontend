@@ -162,14 +162,7 @@ export default function EditUserPage() {
                             value={email}
                             onChange={setEmail}
                         />
-                        <PasswordField
-                            label="New Password (optional)"
-                            placeholder="Leave blank to keep current"
-                            value={password}
-                            onChange={setPassword}
-                            show={showPwd}
-                            setShow={setShowPwd}
-                        />
+
                     </div>
 
                     <div className="text-[11px] text-slate-400">

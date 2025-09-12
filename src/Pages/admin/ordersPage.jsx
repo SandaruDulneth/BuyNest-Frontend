@@ -147,7 +147,7 @@ export default function AdminOrdersPage() {
                                     </div>
                                     <div className="space-y-2">
                                         <p className="flex items-center gap-2">
-                                            <span className="font-semibold">Status:</span>
+                                            <span className="font-semibold rounded-full">Status:</span>
                                             <span
                                                 className={`font-bold ${
                                                     activeOrder.status === "pending"

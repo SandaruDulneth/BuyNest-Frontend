@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import AuthTabs from "../components/AuthTabs.jsx";
-
 
 export default function RegisterPage() {
     const [firstName, setFirstName]     = useState("");
@@ -12,10 +11,12 @@ export default function RegisterPage() {
     const [email, setEmail]             = useState("");
     const [password, setPassword]       = useState("");
     const [confirmPassword, setConfirm] = useState("");
+    const [agree, setAgree]             = useState(false);
     const navigate = useNavigate();
 
     async function handleRegister(e) {
         e.preventDefault();
+        if (!agree) return toast.error("Please accept the Terms and Conditions");
         if (password !== confirmPassword) return toast.error("Passwords don’t match");
 
         try {
@@ -43,7 +44,6 @@ export default function RegisterPage() {
 
                 {/* Right form */}
                 <div className="p-8 bg-white">
-                    {/* Tabs */}
                     <AuthTabs />
 
                     <form onSubmit={handleRegister} className="space-y-4">
@@ -89,6 +89,20 @@ export default function RegisterPage() {
                             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
                             required
                         />
+
+                    
+                        <label className="flex items-start gap-2 text-sm text-gray-600">
+                            <input
+                                type="checkbox"
+                                checked={agree}
+                                onChange={(e) => setAgree(e.target.checked)}
+                                className="mt-1 accent-accent"
+                                required
+                            />
+                            <span>
+                I agree to the Terms and Conditions.
+              </span>
+                        </label>
 
                         <button
                             type="submit"

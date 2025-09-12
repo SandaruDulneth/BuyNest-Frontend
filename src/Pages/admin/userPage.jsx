@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaEdit, FaBan, FaUnlock } from "react-icons/fa";
+import { TiTick } from "react-icons/ti";
 
 export default function UserPage() {
     const [isLoading, setIsLoading] = useState(true);
@@ -294,7 +295,7 @@ export default function UserPage() {
                                                     title={isBlocked ? "Unblock" : "Block"}
                                                 >
                                                     {isBlocked ? (
-                                                        <FaUnlock className="text-green-600 w-5 h-5" /> // green unlock icon
+                                                        <TiTick className="text-green-600 w-7 h-7" /> // green unlock icon
                                                     ) : (
                                                         <FaBan className="text-red-600 w-5 h-5" />     // red ban icon
                                                     )}
