@@ -294,6 +294,9 @@ function Field({ label, value, onChange, placeholder, type = "text", disabled = 
             type={type}
             disabled={disabled}
             value={value}
+
+            required
+
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             className={`rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 ${
@@ -313,6 +316,9 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
+
+            required
+
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -328,6 +334,9 @@ function TextareaField({ label, value, onChange, placeholder, rows = 5 }) {
         <textarea
             rows={rows}
             value={value}
+
+            required
+
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -342,6 +351,9 @@ function SelectField({ label, value, onChange, options = [], placeholder = "Sele
         <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
         <select
             value={value}
+
+            required
+
             onChange={(e) => onChange(e.target.value)}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         >
