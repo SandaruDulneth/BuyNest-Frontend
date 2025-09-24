@@ -120,7 +120,7 @@ export default function EditRiderPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field
                             label="Contact No"
-                            placeholder="+94 71 123 4567"
+                            placeholder="0 71 123 4567"
                             value={contactNo}
                             onChange={setContactNo}
                         />
@@ -174,7 +174,6 @@ export default function EditRiderPage() {
     );
 }
 
-/* ---------------- small inputs ---------------- */
 
 function Field({
                    label,
@@ -192,6 +191,7 @@ function Field({
             <input
                 type={type}
                 value={value}
+                required
                 onChange={(e) => onChange?.(e.target.value)}
                 placeholder={placeholder}
                 disabled={disabled}
@@ -211,6 +211,7 @@ function SelectField({ label, value, onChange, options }) {
             </label>
             <select
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             >
