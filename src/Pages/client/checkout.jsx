@@ -26,9 +26,15 @@ export default function CheckoutPage() {
     async function placeOrder() {
         const token = localStorage.getItem("token");
         if (!token) return toast.error("Please login to place order");
-        if (!phone.trim()) return toast.error("Please enter phone");
-        if (!/^\d{10}$/.test(phone.trim())) {
+        if (!firstName.trim()) return toast.error("First name is required");
+        if (!lastName.trim())  return toast.error("Last name is required");
+        if (!/^\d{10}$/.test(phone.trim()))
             return toast.error("Phone number must be exactly 10 digits");
+
+        if (deliveryMethod === "home") {
+            if (!street.trim())   return toast.error("Street address is required");
+            if (!city.trim())     return toast.error("City is required");
+            if (!province.trim()) return toast.error("Province is required");
         }
         if (cart.length === 0) return toast.error("Your cart is empty");
 

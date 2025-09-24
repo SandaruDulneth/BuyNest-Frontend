@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
-import { addToCart, getCart, removeCart } from "../../utils/cart";
+import {addToCart, addToCartQty, getCart, removeCart} from "../../utils/cart";
 
 export default function CartPage() {
     const [cart, setCart] = useState(getCart());
@@ -49,7 +49,7 @@ export default function CartPage() {
 
     /* ---------- Cart Operations ---------- */
     const updateQty = (item, delta) => {
-        addToCart(item, delta);
+        addToCartQty(item, delta);
         setCart(getCart());
     };
 
