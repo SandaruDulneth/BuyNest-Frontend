@@ -112,7 +112,9 @@ export default function EditSupplierPage() {
             {/* Contact No */}
             <Field
                 label="Contact No"
+
                 placeholder=" 071 123 4567"
+
                 value={contactNo}
                 onChange={setContactNo}
             />
@@ -156,7 +158,9 @@ function Field({ label, value, onChange, placeholder, type = "text", disabled = 
             type={type}
             disabled={disabled}
             value={value}
+
             required
+
             onChange={(e) => onChange?.(e.target.value)}
             placeholder={placeholder}
             className={`rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 ${
@@ -176,7 +180,9 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
+
             required
+
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"

@@ -8,18 +8,22 @@ export default function EditUserPage() {
     const navigate = useNavigate();
     const { userId: userIdFromParams } = useParams();
 
-
     const initial = location?.state || {};
-    const [userId, setUserId] = useState(initial.userId || userIdFromParams || "");
+    const [userId, setUserId]       = useState(initial.userId || userIdFromParams || "");
     const [firstName, setFirstName] = useState(initial.firstName || "");
-    const [lastName, setLastName] = useState(initial.lastName || "");
-    const [email, setEmail] = useState(initial.email || "");
-    const [role, setRole] = useState(initial.role || "");
-    const [password, setPassword] = useState("");
+    const [lastName, setLastName]   = useState(initial.lastName || "");
+    const [email, setEmail]         = useState(initial.email || "");
+    const [role, setRole]           = useState(initial.role || "");
+    const [password, setPassword]   = useState("");
 
-    const [isLoading, setIsLoading] = useState(!initial.userId && !!userIdFromParams);
+    const [isLoading, setIsLoading]     = useState(!initial.userId && !!userIdFromParams);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPwd, setShowPwd] = useState(false);
 
+    const commonRoles = useMemo(
+        () => ["admin", "manager", "staff", "customer"],
+        []
+    );
 
     useEffect(() => {
         async function fetchOne() {
@@ -30,7 +34,6 @@ export default function EditUserPage() {
                 return;
             }
             try {
-
                 const res = await axios.get(`http://localhost:5000/api/users/${userIdFromParams}`, {
                     headers: { Authorization: "Bearer " + token },
                 });
@@ -50,12 +53,10 @@ export default function EditUserPage() {
         if (!initial.userId && userIdFromParams) fetchOne();
     }, [initial.userId, navigate, userIdFromParams]);
 
-    const commonRoles = useMemo(
-        () => ["admin", "manager", "staff", "customer"],
-        []
-    );
+    const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-    async function updateUser() {
+    async function updateUser(e) {
+        e?.preventDefault?.();
         if (!userId) {
             toast.error("Missing userId");
             return;
@@ -65,20 +66,30 @@ export default function EditUserPage() {
             toast.error("Please login first");
             return;
         }
+        if (!firstName.trim() || !lastName.trim() || !email.trim() || !role.trim()) {
+            toast.error("Please fill all required fields");
+            return;
+        }
+        if (!emailOk(email.trim())) {
+            toast.error("Please enter a valid email");
+            return;
+        }
 
         setIsSubmitting(true);
         try {
             const body = {
-
-                firstName: firstName?.trim(),
-                lastName: lastName?.trim(),
-                email: email?.trim(),
-                role: role?.trim(),
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: email.trim().toLowerCase(),
+                role: role.trim(),
             };
-            if (password?.trim()) body.password = password.trim();
+            if (password.trim()) body.password = password.trim();
 
             await axios.put(`http://localhost:5000/api/users/${userId}`, body, {
-                headers: { Authorization: "Bearer " + token },
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
             });
 
             toast.success("✅ User updated successfully");
@@ -92,108 +103,163 @@ export default function EditUserPage() {
 
     if (isLoading) {
         return (
-            <div className="w-full min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="w-16 h-16 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin" />
+            <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6 bg-gray-50">
+                <div className="w-full min-h-[60vh] flex items-center justify-center">
+                    <div className="w-16 h-16 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin" />
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="w-full min-h-screen flex justify-center items-center bg-gray-50 p-6">
-            <div className="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
-                <h2 className="text-2xl font-bold text-green-800 mb-6 text-center">
-                    Edit User
-                </h2>
+        <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6 font-[var(--font-main)]">
+            {/* Page header */}
+            <div className="mx-auto max-w-3xl mb-4 text-center">
+                <h1 className="text-2xl md:text-3xl font-bold text-dgreen">Edit User</h1>
+                <p className="text-sm text-slate-500 mt-1">Update account details and role.</p>
+            </div>
 
-                {/* Top Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* User ID (disabled) */}
-                    <input
-                        type="text"
-                        disabled
-                        placeholder="User ID"
-                        className="input input-bordered w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
-                        value={userId}
-                        onChange={() => {}}
-                    />
+            {/* Card */}
+            <form
+                onSubmit={updateUser}
+                className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white shadow-sm"
+            >
+                <div className="p-4 md:p-6 space-y-5">
+                    {/* Row 1 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Field label="User ID" value={userId} disabled />
+                        <SelectField
+                            label="Role *"
+                            value={role}
+                            onChange={setRole}
+                            options={commonRoles.map((r) => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
+                            placeholder="Select role"
+                        />
+                    </div>
 
-                    {/* Role */}
-                    <select
-                        className="input input-bordered w-full p-2 border rounded"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    >
-                        <option value="">Select role</option>
-                        {commonRoles.map((r) => (
-                            <option key={r} value={r}>
-                                {r.charAt(0).toUpperCase() + r.slice(1)}
-                            </option>
-                        ))}
-                    </select>
+                    {/* Row 2 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Field
+                            label="First Name *"
+                            placeholder="John"
+                            value={firstName}
+                            onChange={setFirstName}
+                        />
+                        <Field
+                            label="Last Name *"
+                            placeholder="Doe"
+                            value={lastName}
+                            onChange={setLastName}
+                        />
+                    </div>
 
-                    {/* First Name */}
-                    <input
-                        type="text"
-                        placeholder="First name *"
-                        className="input input-bordered w-full p-2 border rounded"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
+                    {/* Row 3 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Field
+                            label="Email *"
+                            type="email"
+                            placeholder="john.doe@example.com"
+                            value={email}
+                            onChange={setEmail}
+                        />
 
-                    {/* Last Name */}
-                    <input
-                        type="text"
-                        placeholder="Last name *"
-                        className="input input-bordered w-full p-2 border rounded"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                    />
+                    </div>
+
+                    <div className="text-[11px] text-slate-400">
+                        Tip: Use a strong password with a mix of letters, numbers, and symbols.
+                    </div>
                 </div>
 
-                {/* Email */}
-                <div className="mt-4">
-                    <input
-                        type="email"
-                        placeholder="Email *"
-                        className="input input-bordered w-full p-2 border rounded"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-
-                {/* Password (optional) */}
-                <div className="mt-4">
-                    <input
-                        type="password"
-                        placeholder="New Password (leave blank to keep current)"
-                        className="input input-bordered w-full p-2 border rounded"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <p className="text-xs text-slate-500 mt-1">
-                        If provided, it will be securely hashed by the server.
-                    </p>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex justify-end gap-4 mt-6">
+                {/* Footer actions */}
+                <div className="border-t border-slate-200 bg-slate-50/60 px-4 py-4 md:px-6 md:py-5 rounded-b-2xl flex items-center justify-end gap-3">
                     <Link
                         to="/admin/users"
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                        className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 active:scale-[.99]"
                     >
                         Cancel
                     </Link>
                     <button
-                        onClick={updateUser}
+                        type="submit"
                         disabled={isSubmitting}
-                        className={`bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ${
-                            isSubmitting ? "opacity-80 cursor-not-allowed" : ""
-                        }`}
+                        className="inline-flex items-center justify-center rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-dgreen/80 active:scale-[.99] disabled:opacity-60"
                     >
-                        {isSubmitting ? "Updating..." : "Update User"}
+                        {isSubmitting ? (
+                            <span className="inline-flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/50 border-t-white"></span>
+                Saving...
+              </span>
+                        ) : (
+                            "Update User"
+                        )}
                     </button>
                 </div>
+            </form>
+        </div>
+    );
+}
+
+/* ------------------- inputs matching your card design ------------------- */
+
+function Field({ label, value, onChange, placeholder, type = "text", disabled = false }) {
+    return (
+        <div className="flex flex-col">
+            <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
+            <input
+                type={type}
+                disabled={disabled}
+                value={value}
+                onChange={(e) => onChange?.(e.target.value)}
+                placeholder={placeholder}
+                className={`rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 ${
+                    disabled ? "bg-slate-100 cursor-not-allowed" : ""
+                }`}
+            />
+        </div>
+    );
+}
+
+function SelectField({ label, value, onChange, options = [], placeholder = "Select" }) {
+    return (
+        <div className="flex flex-col">
+            <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
+            <select
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            >
+                <option value="">{placeholder}</option>
+                {options.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+            </select>
+        </div>
+    );
+}
+
+function PasswordField({ label, value, onChange, placeholder, show, setShow }) {
+    return (
+        <div className="flex flex-col">
+            <label className="mb-1 text-sm font-semibold text-slate-700">{label}</label>
+            <div className="relative">
+                <input
+                    type={show ? "text" : "password"}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder={placeholder}
+                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                />
+                <button
+                    type="button"
+                    onClick={() => setShow((s) => !s)}
+                    className="absolute inset-y-0 right-2 my-auto h-7 rounded px-2 text-xs text-slate-600 hover:bg-slate-100"
+                    title={show ? "Hide password" : "Show password"}
+                >
+                    {show ? "Hide" : "Show"}
+                </button>
             </div>
+            <p className="mt-1 text-[11px] text-slate-400">
+                Leave blank to keep the existing password.
+            </p>
         </div>
     );
 }

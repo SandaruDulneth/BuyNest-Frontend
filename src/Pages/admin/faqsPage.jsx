@@ -87,7 +87,7 @@ export default function AdminFaqPage() {
             {/* Header + primary action */}
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-800">
+                    <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
                         FAQ Management
                     </h1>
                     <p className="text-sm text-slate-500">
@@ -97,7 +97,7 @@ export default function AdminFaqPage() {
 
                 <Link
                     to="/admin/add-faqs"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
                     <FiPlus className="text-base" />
                     Add FAQ
@@ -198,14 +198,14 @@ export default function AdminFaqPage() {
                                             <div className="inline-flex items-center gap-3">
                                                 <button
                                                     onClick={() => navigate("/admin/edit-faqs", { state: f })}
-                                                    className="text-blue-600 hover:text-blue-700 transition"
+                                                    className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
                                                     title="Edit"
                                                 >
                                                     <FaEdit size={18} />
                                                 </button>
                                                 <button
                                                     onClick={() => deleteFaq(f.faqId)}
-                                                    className="text-red-600 hover:text-red-700 transition"
+                                                    className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 transition"
                                                     title="Delete"
                                                 >
                                                     <FaTrash size={18} />

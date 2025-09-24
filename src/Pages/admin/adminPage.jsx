@@ -41,7 +41,7 @@ export default function AdminPage() {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    // NOTE: no credentials: "include"
+
                 });
                 if (!r.ok) throw new Error(await r.text().catch(() => "Failed to load profile"));
                 const j = await r.json();
@@ -56,9 +56,9 @@ export default function AdminPage() {
     }, []);
 
     const linkBase =
-        "group flex items-center gap-3 px-4 py-2 rounded-lg transition-colors";
-    const linkIdle = "text-slate-300 hover:bg-slate-800 hover:text-indigo-300";
-    const linkActive = "bg-slate-800 text-indigo-400";
+        "group flex items-center gap-3 px-4 py-2 my-2 rounded-lg transition-colors";
+    const linkIdle = "text-slate-300 hover:bg-white hover:text-accent";
+    const linkActive = "bg-white text-accent";
 
     const SectionTitle = ({ children }) => (
         <div className="mt-6 mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -66,7 +66,7 @@ export default function AdminPage() {
         </div>
     );
 
-    // NOTE: `icon` is a React element (e.g. <FiHome />)
+
     const Item = ({ to, icon, label, end = false }) => (
         <NavLink
             to={to}
@@ -88,7 +88,7 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            {/* Top bar (mobile) */}
+
             <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-slate-200 bg-white px-3 py-2 md:hidden">
                 <button
                     aria-label="Open menu"
@@ -100,26 +100,26 @@ export default function AdminPage() {
                 <div className="text-sm font-semibold text-slate-700">Admin Dashboard</div>
             </div>
 
-            {/* Fixed sidebar (desktop) */}
+
             <aside
                 className="
           hidden md:flex md:flex-col
           fixed inset-y-0 left-0 z-40 w-[280px]
-          bg-slate-900 text-slate-200 border-r border-slate-800
+          bg-green-900/85 text-slate-200 border-r
         "
             >
                 <SidebarContent me={me} loadingMe={loadingMe} />
             </aside>
 
-            {/* Drawer sidebar (mobile) */}
+
             {open && (
                 <div className="md:hidden">
-                    {/* dim background */}
+
                     <div
                         className="fixed inset-0 z-40 bg-black/40"
                         onClick={() => setOpen(false)}
                     />
-                    {/* panel */}
+
                     <div className="fixed inset-y-0 left-0 z-50 w-[85%] max-w-[320px] bg-slate-900 text-slate-200 border-r border-slate-800 flex flex-col">
                         <HeaderProfile me={me} loadingMe={loadingMe} onClose={() => setOpen(false)} />
                         {/* Nav list (mobile) */}
@@ -189,24 +189,24 @@ export default function AdminPage() {
           height: calc(100vh - 56px - 68px);
         }
         /* Dark scrollbar to match sidebar (WebKit: Chrome/Edge/Safari) */
-        .scrollbar-dark::-webkit-scrollbar {
+        .scrollbar-light::-webkit-scrollbar {
           width: 10px;
         }
-        .scrollbar-dark::-webkit-scrollbar-track {
-          background: #0f172a; /* slate-900 */
+        .scrollbar-light::-webkit-scrollbar-track {
+          background: #064e3b; /* slate-900 */
         }
-        .scrollbar-dark::-webkit-scrollbar-thumb {
-          background-color: #334155; /* slate-700 */
+        .scrollbar-light::-webkit-scrollbar-thumb {
+          background-color: #10b981; /* slate-700 */
           border-radius: 9999px;
           border: 2px solid #0f172a; /* match track (sidebar bg) */
         }
-        .scrollbar-dark::-webkit-scrollbar-thumb:hover {
-          background-color: #475569; /* slate-600 */
+        .scrollbar-light::-webkit-scrollbar-thumb:hover {
+          background-color: #34d399; /* slate-600 */
         }
         /* Firefox */
         .scrollbar-dark {
           scrollbar-width: thin;
-          scrollbar-color: #334155 #0f172a; /* thumb track */
+          scrollbar-color: #10b981 #064e3b; /* thumb track */
         }
       `}</style>
         </div>
@@ -232,7 +232,7 @@ export default function AdminPage() {
             );
         }
         return (
-            <div className="h-10 w-10 rounded-full bg-slate-700 text-slate-200 grid place-items-center text-sm font-semibold">
+            <div className="h-10 w-10 rounded-full bg-white text-slate-800 grid place-items-center text-sm font-semibold">
                 {initials}
             </div>
         );
@@ -270,7 +270,7 @@ export default function AdminPage() {
             <>
                 {/* Brand / Profile block */}
                 <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-800">
-                    <Avatar name={me?.name} src={me?.avatarUrl} />
+                    <Avatar name={me?.name}  src={me?.avatarUrl} />
                     <div>
                         <div className="text-sm font-semibold">
                             {loadingMe ? "Loading..." : me?.name || "Admin"}
@@ -309,9 +309,9 @@ export default function AdminPage() {
                 <Item to="/admin/reviews" icon={<FiStar />} label="Reviews" />
                 <Item to="/admin/riders" icon={<FiTruck />} label="Riders" />
                 <Item to="/admin/faqs" icon={<FiHelpCircle />} label="FAQ Page" />
-                {/* Suppliers with icon in front (Contacts moved here) */}
+
                 <Item to="/admin/suppliers" icon={<FiFileText />} label="Suppliers" />
-                {/* NEW: Delivery right below Suppliers */}
+
                 <Item to="/admin/delivery" icon={<FiSend />} label="Delivery" />
 
                 <SectionTitle>Quick Actions</SectionTitle>
@@ -319,6 +319,7 @@ export default function AdminPage() {
                 <Item to="/admin/add-suppliers" icon={<FiPlusCircle />} label="Add Supplier" />
                 <Item to="/admin/add-riders" icon={<FiPlusCircle />} label="Add Rider" />
                 <Item to="/admin/add-faqs" icon={<FiPlusCircle />} label="Add FAQ" />
+                <Item to="/admin/add-users" icon={<FiPlusCircle />} label="Add Users" />
 
                 <SectionTitle>Charts</SectionTitle>
                 <Item to="/admin/charts/bar" icon={<FiBarChart2 />} label="Bar Chart" />

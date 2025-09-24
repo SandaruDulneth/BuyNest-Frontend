@@ -38,7 +38,7 @@ export default function Header() {
               0
             </span>
                     </Link>
-                    <Link to="/account" className="flex items-center gap-1 hover:text-accent">
+                    <Link to="/login" className="flex items-center gap-1 hover:text-accent">
                         <RxAvatar size={22} /> Account
                     </Link>
                 </div>
