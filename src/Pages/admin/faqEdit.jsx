@@ -135,6 +135,7 @@ function Field({ label, value, onChange, placeholder, type = "text", disabled = 
             <input
                 type={type}
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 disabled={disabled}
@@ -153,6 +154,7 @@ function TextareaField({ label, value, onChange, placeholder, rows = 5 }) {
             <textarea
                 rows={rows}
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
