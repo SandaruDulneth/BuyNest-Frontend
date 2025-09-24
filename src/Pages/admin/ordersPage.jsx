@@ -141,6 +141,10 @@ export default function AdminOrdersPage() {
                                             {activeOrder.phone}
                                         </p>
                                         <p>
+                                            <span className="font-semibold">Delivery method:</span>{" "}
+                                            {activeOrder.deliveryMethod}
+                                        </p>
+                                        <p>
                                             <span className="font-semibold">Address:</span>{" "}
                                             {activeOrder.address}
                                         </p>
@@ -287,6 +291,7 @@ export default function AdminOrdersPage() {
                                 <Th>Date</Th>
                                 <Th>Total</Th>
                                 <Th>Status</Th>
+                                <Th>Delivery Method</Th>
                                 <Th>Payment</Th>
                                 <Th className="text-center">Actions</Th>
                             </tr>
@@ -320,6 +325,7 @@ export default function AdminOrdersPage() {
                                             })}
                                         </Td>
                                         <Td>{statusBadge(order.status)}</Td>
+                                        <Td>{statusBadge(order.deliveryMethod)}</Td>
                                         <Td>{paymentBadge(order.paymentStatus)}</Td>
                                         <Td className="text-center">
                                             <button
