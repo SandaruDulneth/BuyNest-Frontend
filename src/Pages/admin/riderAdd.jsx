@@ -57,7 +57,7 @@ export default function AddRiderPage() {
         <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6">
             {/* Title */}
             <div className="mx-auto max-w-3xl mb-4 text-center">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-800">
+                <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
                     Add New Rider
                 </h1>
                 <p className="text-sm text-slate-500 mt-1">
@@ -75,7 +75,7 @@ export default function AddRiderPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field
                             label="Rider ID *"
-                            placeholder="BYNRD0001"
+                            placeholder="001"
                             value={riderId}
                             onChange={setRiderId}
                         />
@@ -116,7 +116,7 @@ export default function AddRiderPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field
                             label="Contact No"
-                            placeholder="+94 71 123 4567"
+                            placeholder="071 123 4567"
                             value={contactNo}
                             onChange={setContactNo}
                         />
@@ -153,7 +153,7 @@ export default function AddRiderPage() {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] disabled:opacity-60"
+                        className="inline-flex items-center justify-center rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] disabled:opacity-60"
                     >
                         {submitting ? (
                             <span className="inline-flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function AddRiderPage() {
     );
 }
 
-/* ---------------- small inputs ---------------- */
+
 
 function Field({ label, value, onChange, placeholder, type = "text" }) {
     return (
@@ -181,6 +181,7 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
             <input
                 type={type}
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -197,6 +198,7 @@ function SelectField({ label, value, onChange, options }) {
             </label>
             <select
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
             >

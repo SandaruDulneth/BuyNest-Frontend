@@ -11,12 +11,12 @@ export default function AdminRiderPage() {
     const [fetchError, setFetchError] = useState("");
     const navigate = useNavigate();
 
-    // ------- filters -------
-    const [q, setQ] = useState("");              // search text
-    const [status, setStatus] = useState("all"); // all | active | inactive
-    const [vehicle, setVehicle] = useState("all"); // all or a type from data
 
-    // ------- pagination -------
+    const [q, setQ] = useState("");
+    const [status, setStatus] = useState("all");
+    const [vehicle, setVehicle] = useState("all");
+
+
     const PAGE_SIZE = 10;
     const [page, setPage] = useState(1);
 
@@ -67,7 +67,7 @@ export default function AdminRiderPage() {
             });
     }
 
-    // ---------- derived data ----------
+
     const { total, activeCount, inactiveCount } = useMemo(() => {
         const total = riders.length;
         const activeCount = riders.filter((r) => !!r.status).length;
@@ -75,7 +75,7 @@ export default function AdminRiderPage() {
         return { total, activeCount, inactiveCount };
     }, [riders]);
 
-    // distinct vehicle types for dropdown
+
     const vehicleOptions = useMemo(() => {
         const set = new Set(
             riders
@@ -85,7 +85,7 @@ export default function AdminRiderPage() {
         return ["all", ...Array.from(set)];
     }, [riders]);
 
-    // filter logic (name/email/id + status + vehicle)
+
     const filtered = useMemo(() => {
         const term = q.trim().toLowerCase();
         return riders.filter((r) => {
@@ -108,12 +108,12 @@ export default function AdminRiderPage() {
         });
     }, [riders, q, status, vehicle]);
 
-    // reset to page 1 whenever the filter set changes
+
     useEffect(() => {
         setPage(1);
     }, [q, status, vehicle, riders]);
 
-    // paginate filtered list
+
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const start = (page - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
@@ -130,10 +130,10 @@ export default function AdminRiderPage() {
 
     return (
         <div className="relative w-full h-full max-h-full overflow-y-auto p-4 font-[var(--font-main)]">
-            {/* Page header with action */}
+
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold text-slate-800">
+                    <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
                         Riders Inventory
                     </h1>
                     <p className="text-sm text-slate-500">
@@ -143,7 +143,7 @@ export default function AdminRiderPage() {
 
                 <Link
                     to="/admin/add-riders"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[.99] focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
                     <FiPlus className="text-base" />
                     Add Rider
@@ -248,7 +248,7 @@ export default function AdminRiderPage() {
                                         key={key}
                                         className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}
                                     >
-                                        <Td>{r.riderId}</Td>
+                                        <Td className="font-semibold">{r.riderId}</Td>
                                         <Td>{r.Name || "-"}</Td>
                                         <Td className="truncate max-w-[260px]">{r.email || "-"}</Td>
                                         <Td>{r.contactNo || "-"}</Td>
@@ -270,14 +270,14 @@ export default function AdminRiderPage() {
                                                     onClick={() =>
                                                         navigate("/admin/edit-riders", { state: r })
                                                     }
-                                                    className="text-blue-600 hover:text-blue-700 transition"
+                                                    className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
                                                     title="Edit"
                                                 >
                                                     <FaEdit size={18} />
                                                 </button>
                                                 <button
                                                     onClick={() => deleteRider(r.riderId)}
-                                                    className="text-red-600 hover:text-red-700 transition"
+                                                    className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 transition"
                                                     title="Delete"
                                                 >
                                                     <FaTrash size={18} />
