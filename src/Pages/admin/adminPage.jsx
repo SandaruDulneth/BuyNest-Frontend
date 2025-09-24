@@ -71,6 +71,7 @@ export default function AdminPage() {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
+
                 })
                 .then((response) => {
                     if (response.data.role !== "admin") {
@@ -86,11 +87,14 @@ export default function AdminPage() {
                     setStatus("unauthenticated");
                     toast.error("You are not authenticated, please login");
                     setTimeout(() => navigate("/login"), 300);
+
                 });
         }
     }, [status]);
 
+
     const linkBase = "group flex items-center gap-3 px-4 py-2 my-2 rounded-lg transition-colors";
+
     const linkIdle = "text-slate-300 hover:bg-white hover:text-accent";
     const linkActive = "bg-white text-accent";
 
@@ -99,6 +103,7 @@ export default function AdminPage() {
             {children}
         </div>
     );
+
 
     const Item = ({ to, icon, label, end = false }) => (
         <NavLink
@@ -120,8 +125,10 @@ export default function AdminPage() {
     };
 
     return (
+
         <div className="min-h-screen bg-slate-50 font-poppins">
             {/* Mobile header */}
+
             <div className="sticky top-0 z-40 flex items-center gap-3 border-b border-slate-200 bg-white px-3 py-2 md:hidden">
                 <button
                     aria-label="Open menu"
@@ -133,6 +140,7 @@ export default function AdminPage() {
                 <div className="text-sm font-semibold text-slate-700">Admin Dashboard</div>
             </div>
 
+
             {/* Desktop sidebar */}
             <aside className="hidden md:flex md:flex-col fixed inset-y-0 left-0 z-40 w-[280px]
         bg-green-900/85 text-slate-200 border-r">
@@ -142,10 +150,12 @@ export default function AdminPage() {
             {/* Mobile drawer */}
             {open && (
                 <div className="md:hidden">
+
                     <div
                         className="fixed inset-0 z-40 bg-black/40"
                         onClick={() => setOpen(false)}
                     />
+
                     <div className="fixed inset-y-0 left-0 z-50 w-[85%] max-w-[320px] bg-slate-900 text-slate-200 border-r border-slate-800 flex flex-col">
                         <HeaderProfile me={me} onClose={() => setOpen(false)} />
                         <nav className="py-4 overflow-y-auto h-[calc(100vh-56px-68px)] scrollbar-dark">
@@ -194,9 +204,11 @@ export default function AdminPage() {
         .sidebar-scroll {
           height: calc(100vh - 56px - 68px);
         }
+
         .scrollbar-dark {
           scrollbar-width: thin;
           scrollbar-color: #10b981 #064e3b;
+
         }
       `}</style>
         </div>
@@ -240,8 +252,10 @@ export default function AdminPage() {
     function SidebarContent({ me }) {
         return (
             <>
+
                 <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-800 font-poppins">
                     <Avatar name={me?.name} />
+
                     <div>
                         <div className="text-sm font-semibold">{me?.name || "Admin"}</div>
                         <div className="text-[11px] text-slate-400">{me?.email || ""}</div>
@@ -270,7 +284,9 @@ export default function AdminPage() {
                 <Item to="/admin/reviews" icon={<FiStar />} label="Reviews" />
                 <Item to="/admin/riders" icon={<FiTruck />} label="Riders" />
                 <Item to="/admin/faqs" icon={<FiHelpCircle />} label="FAQ Page" />
+
                 <Item to="/admin/suppliers" icon={<FiFileText />} label="Suppliers" />
+
                 <Item to="/admin/delivery" icon={<FiSend />} label="Delivery" />
 
                 <SectionTitle>Quick Actions</SectionTitle>

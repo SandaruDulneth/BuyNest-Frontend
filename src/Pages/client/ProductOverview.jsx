@@ -3,11 +3,14 @@ import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {addToCart} from "../../utils/cart.js";
 
+
 export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [state, setState] = useState({ loading: true, error: null });
+
   const [activeIndex, setActiveIndex] = useState(0);
+
 
   useEffect(() => {
     const ac = new AbortController();
@@ -27,6 +30,7 @@ export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
         const data = await res.json();
         setProduct(data);
         setActiveIndex(0);
+
       } catch (err) {
         if (err.name !== "AbortError") {
           setState({
@@ -49,20 +53,24 @@ export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
 
   const {
     productId, // 👈 use this instead of _id
+
     name,
     price,
     labelledPrice,
     description,
     images = [],
     imageUrl,
+
     categories,
   } = product;
 
   const category = Array.isArray(categories) ? categories[0] : categories;
 
+
   const cleanPrice = Number(String(price).replace(/[^0-9.]/g, "")) || 0;
   const cleanLabelled =
     Number(String(labelledPrice).replace(/[^0-9.]/g, "")) || 0;
+
 
   // gather all images
   const allImages = [
@@ -91,20 +99,26 @@ export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
         <Link to="/" className="text-accent font-medium hover:underline">
           Home
         </Link>
+
         {category && (
           <>
             <span className="text-gray-400">›</span>
             <Link
               to={`/category/${category.toLowerCase().replace(/\s+/g, "-")}`}
+
               className="text-accent font-medium hover:underline"
+
             >
               {category}
             </Link>
           </>
         )}
+
+
         <span className="text-gray-400">›</span>
         <span className="text-gray-700">{name}</span>
       </nav>
+
 
       {/* ✅ Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -211,6 +225,7 @@ export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
             <p>✓ 7-day return policy</p>
             <p>✓ Secure payment guaranteed</p>
           </div>
+
         </div>
       </div>
     </main>

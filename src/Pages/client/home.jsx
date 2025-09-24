@@ -52,6 +52,7 @@ export default function HomePage() {
         </div>
       </section>
 
+
       {/* TOP SAVER TODAY */}
       <section id="top-saver" className="container mx-auto px-4 md:px-8 lg:px-12">
         <h2 className="text-xl md:text-2xl font-bold text-gray-900 pb-9">
@@ -155,6 +156,7 @@ export default function HomePage() {
                 <div className="h-14 w-14 rounded-xl bg-gray-100 group-hover:bg-emerald-50 flex items-center justify-center">
                   <Icon className="h-8 w-8 text-gray-500 group-hover:text-accent/80" />
                 </div>
+
                 <p className="mt-3 text-sm font-semibold text-gray-800 text-center">
                   {c.name}
                 </p>
@@ -164,6 +166,7 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+
   );
 }
 

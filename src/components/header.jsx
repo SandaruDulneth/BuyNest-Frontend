@@ -7,6 +7,7 @@ import GroceryMegaMenu from "./CategoryMenu.jsx";
 import {jwtDecode} from "jwt-decode";
 
 export default function Header() {
+
   const navigate = useNavigate();
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
@@ -163,4 +164,5 @@ export default function Header() {
       </div>
     </header>
   );
+
 }

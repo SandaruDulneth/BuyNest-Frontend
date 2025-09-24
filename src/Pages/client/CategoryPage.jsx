@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import ProductCardCat from "../../components/ProductCardCat.jsx";
 
@@ -247,6 +248,7 @@ export default function CategoryPage({ category }) {
           </div>
         )}
       </section>
+
     </main>
   );
 }

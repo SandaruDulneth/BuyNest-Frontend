@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import {addToCart} from "../utils/cart.js";
+
 
 export default function ProductCard(props) {
   const p = props.product ?? props;
@@ -22,7 +24,9 @@ export default function ProductCard(props) {
         ? (typeof images[0] === "string"
             ? images[0]
             : images[0]?.url || images[0]?.publicUrl)
+
         : null) || "/images/placeholder.png"
+
     );
 
   const cleanPrice = Number(String(price).replace(/[^0-9.]/g, "")) || 0;
@@ -60,6 +64,7 @@ export default function ProductCard(props) {
         ${props.className || ""}
       `}
     >
+
       {/* ✅ Inline badges row */}
       {(discount || stockLabel) && (
         <div className="absolute top-2 left-4 right-4 flex justify-between items-center">
@@ -74,6 +79,7 @@ export default function ProductCard(props) {
 
       {/* Left side: Text + pricing */}
       <div className="flex-1 pr-4 mt-6">
+
         <Link
           to={`/product/${_id}`}
           className="line-clamp-2 text-[15px] font-semibold text-gray-800 hover:text-emerald-600"
@@ -122,8 +128,10 @@ export default function ProductCard(props) {
         </div>
       </div>
 
+
       {/* Right side: Product image */}
       <div className="flex-shrink-0 h-32 w-32 relative mt-6">
+
         <Link to={`/product/${_id}`}>
           <img
             src={derivedImage}

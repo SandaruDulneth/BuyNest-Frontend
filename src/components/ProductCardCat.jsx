@@ -1,6 +1,8 @@
 import React from "react";
+
 import { Link } from "react-router-dom";
 import {addToCart} from "../utils/cart.js";
+
 
 export default function ProductCardCat({ product, onAddToCart }) {
   const {
@@ -12,7 +14,9 @@ export default function ProductCardCat({ product, onAddToCart }) {
     images = [],
     imageUrl: imageUrlProp,
     unit,
+
     stock = 0,
+
   } = product ?? {};
 
   const derivedImage =
@@ -33,6 +37,7 @@ export default function ProductCardCat({ product, onAddToCart }) {
     cleanLabelled > 0 && cleanPrice > 0
       ? Math.round(((cleanLabelled - cleanPrice) / cleanLabelled) * 100)
       : null;
+
 
   const productKey = _id || productId;
 
@@ -66,6 +71,7 @@ export default function ProductCardCat({ product, onAddToCart }) {
         </div>
       )}
 
+
       <Link
         to={`/product/${productKey}`}
         className="flex flex-col items-center text-center w-full"
@@ -73,7 +79,9 @@ export default function ProductCardCat({ product, onAddToCart }) {
         <img
           src={derivedImage}
           alt={name}
+
           className="h-32 object-contain mb-3 mt-6"
+
           loading="lazy"
         />
         <h3 className="font-medium text-gray-900 line-clamp-2">{name}</h3>
@@ -82,6 +90,7 @@ export default function ProductCardCat({ product, onAddToCart }) {
 
       <div className="mt-2 flex items-center gap-2">
         <span className="text-lg font-bold text-accent">
+
           LKR {cleanPrice.toFixed(2)}
         </span>
         {cleanLabelled > 0 && cleanLabelled > cleanPrice && (
@@ -93,6 +102,7 @@ export default function ProductCardCat({ product, onAddToCart }) {
 
       {/* Add Button */}
       <button
+
         onClick={()=>addToCart(product,1)}
         disabled={stock === 0}
         className={`mt-4 flex items-center gap-1 px-4 py-2 rounded-lg transition
@@ -103,6 +113,7 @@ export default function ProductCardCat({ product, onAddToCart }) {
           }`}
       >
         {stock === 0 ? "Unavailable" : "Add to Cart"}
+
       </button>
     </div>
   );

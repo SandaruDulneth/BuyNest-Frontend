@@ -8,6 +8,7 @@ import RegisterPage from "./Pages/register.jsx";
 import {Toaster} from "react-hot-toast";
 import ScrollToTop from "./components/ScrollToTop";   // ✅ import
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,11 +20,9 @@ function App() {
         <Routes>
           {/* Client routes */}
           <Route path="/*" element={<CR />} />
-
           {/* Auth routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<RegisterPage />} />
-
           {/* Admin routes */}
           <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
