@@ -79,7 +79,9 @@ export default function AddSupplierPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field
                   label="Supplier ID *"
-                  placeholder="SUP-001"
+
+                  placeholder="001"
+
                   value={supplierId}
                   onChange={setSupplierId}
               />
@@ -127,7 +129,9 @@ export default function AddSupplierPage() {
               />
               <Field
                   label="Contact No"
-                  placeholder="+94 71 123 4567"
+
+                  placeholder="071 123 4567"
+
                   value={contactNo}
                   onChange={setContactNo}
               />
@@ -167,7 +171,6 @@ export default function AddSupplierPage() {
   );
 }
 
-/* -------- small input atoms (same look & feel as your other forms) -------- */
 
 function Field({ label, value, onChange, placeholder, type = "text" }) {
   return (
@@ -178,6 +181,9 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
+
+            required
+
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
@@ -193,6 +199,9 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
+
+            required
+
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
