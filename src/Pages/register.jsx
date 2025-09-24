@@ -34,12 +34,12 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="min-h-screen flex items-center justify-center bg-white font-poppins">
             <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden shadow-md border border-gray-200">
 
                 {/* Left image */}
                 <div className="hidden md:block bg-gray-100">
-                    <img src="/pic1.jpeg" alt="Illustration" className="h-full w-full object-cover" />
+                    <img src="/pci3.jpeg" alt="Illustration" className="h-full w-full object-cover" />
                 </div>
 
                 {/* Right form */}
@@ -80,6 +80,7 @@ export default function RegisterPage() {
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
                             required
+                            minLength="8"
                         />
                         <input
                             type="password"
@@ -88,6 +89,7 @@ export default function RegisterPage() {
                             onChange={(e) => setConfirm(e.target.value)}
                             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
                             required
+                            minLength="8"
                         />
 
                     

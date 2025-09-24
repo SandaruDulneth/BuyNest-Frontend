@@ -85,12 +85,14 @@ export default function AddUserPage() {
                             placeholder="John"
                             value={firstName}
                             onChange={setFirstName}
+
                         />
                         <Field
                             label="Last Name *"
                             placeholder="Doe"
                             value={lastName}
                             onChange={setLastName}
+
                         />
                     </div>
 
@@ -102,6 +104,7 @@ export default function AddUserPage() {
                             placeholder="john.doe@example.com"
                             value={email}
                             onChange={setEmail}
+
                         />
                         <SelectField
                             label="Role *"
@@ -124,6 +127,7 @@ export default function AddUserPage() {
                             onChange={setPassword}
                             show={showPwd}
                             setShow={setShowPwd}
+
                         />
                         <PasswordField
                             label="Confirm Password *"
@@ -132,6 +136,7 @@ export default function AddUserPage() {
                             onChange={setConfirmPassword}
                             show={showConfirm}
                             setShow={setShowConfirm}
+
                         />
                     </div>
 
@@ -213,6 +218,8 @@ function PasswordField({ label, value, onChange, placeholder, show, setShow }) {
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
+                    required
+                    minLength="8"
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
                 />
                 <button

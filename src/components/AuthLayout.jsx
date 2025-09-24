@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function AuthLayout({ children, title, subtitle, backLink }) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white text-gray-800">
+        <div className="min-h-screen flex items-center justify-center bg-white text-gray-800 font-poppins">
             <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
 
                 {/* Left image panel */}
