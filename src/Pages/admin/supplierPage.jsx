@@ -9,7 +9,9 @@ export default function AdminSupplierPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
   const pageSize = 7;
+
 
   const navigate = useNavigate();
 
@@ -22,6 +24,7 @@ export default function AdminSupplierPage() {
           }),
       []
   );
+
 
   function formatDate(dateStr) {
     if (!dateStr) return "-";
@@ -68,7 +71,9 @@ export default function AdminSupplierPage() {
     }
     axios
         .delete("http://localhost:5000/api/suppliers/" + supplierId, {
+
           headers: { Authorization: "Bearer " + token },
+
         })
         .then(() => {
           toast.success("Supplier deleted successfully");
@@ -95,10 +100,12 @@ export default function AdminSupplierPage() {
       startIndex + pageSize
   );
 
+
   // summary
   const totalSuppliers = suppliers.length;
   const totalStock = suppliers.reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
   const totalCost = suppliers.reduce((sum, s) => sum + (Number(s.cost) || 0), 0);
+
 
   return (
       <div className="relative w-full h-full max-h-full overflow-y-auto p-6 font-[var(--font-main)] ">
@@ -112,12 +119,14 @@ export default function AdminSupplierPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
           <SummaryCard label="Total Suppliers" value={totalSuppliers} />
           <SummaryCard label="Total Stock" value={totalStock} />
           <SummaryCard label="Total Supply Cost" value={fmt.format(totalCost)} />
         </div>
 
         {/* Filters Bar */}
+
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
           {/* Search Bar */}
           <div className="flex items-center border border-slate-300 rounded px-2 py-1 w-full md:w-1/2">
@@ -144,7 +153,9 @@ export default function AdminSupplierPage() {
           {/* Add Button */}
           <Link
               to="/admin/add-suppliers"
+
               className="bg-dgreen hover:bg-dgreen/80 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
+
           >
             + Add Supplier
           </Link>
@@ -176,6 +187,7 @@ export default function AdminSupplierPage() {
                 {currentSuppliers.length > 0 ? (
                     currentSuppliers.map((s, index) => (
                         <tr
+
                             key={s.supplierId || index}
                             className="hover:bg-slate-50 transition duration-200"
                         >
@@ -191,6 +203,7 @@ export default function AdminSupplierPage() {
                           </td>
                           <td className="py-3 px-4">{s.contactNo || "-"}</td>
                           <td className="py-3 px-4 text-gray-600">{formatDate(s.date)}</td>
+
                           <td className="py-3 px-4">
                             <div className="flex justify-center space-x-2">
                               <button
@@ -260,6 +273,7 @@ export default function AdminSupplierPage() {
   );
 }
 
+
 /* ---------- Small summary card ---------- */
 function SummaryCard({ label, value }) {
   return (
@@ -269,3 +283,4 @@ function SummaryCard({ label, value }) {
       </div>
   );
 }
+

@@ -39,7 +39,9 @@ export default function RegisterPage() {
 
                 {/* Left image */}
                 <div className="hidden md:block bg-gray-100">
+
                     <img src="/authimage.jpeg" alt="Illustration" className="h-full w-full object-cover" />
+
                 </div>
 
                 {/* Right form */}
