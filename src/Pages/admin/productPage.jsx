@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FiPieChart } from "react-icons/fi";
 import axios from "axios";
 import toast from "react-hot-toast";
+
+function LoadingScreen() {
+    return (
+        <div className="flex flex-col items-center justify-center h-full w-full text-emerald-700">
+            <div className="animate-spin h-12 w-12 border-4 border-emerald-400 border-t-transparent rounded-full mb-4"></div>
+            <p className="text-lg font-semibold">Loading products...</p>
+        </div>
+    );
+}
 
 export default function ProductPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +25,7 @@ export default function ProductPage() {
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 8;
 
   useEffect(() => {
     if (isLoading) {
@@ -52,7 +62,6 @@ export default function ProductPage() {
       });
   }
 
-  // filters
   function handleCategoryChange(e) {
     setSelectedCategory(e.target.value);
     setCurrentPage(1);
@@ -67,11 +76,10 @@ export default function ProductPage() {
     ...new Set(allProducts.flatMap((p) => p.categories || [])),
   ];
 
-  // apply filters + search
   const filteredProducts = allProducts.filter((p) => {
     const categoryMatch =
       selectedCategory === "All" ||
-      p.categories.some(
+      p.categories?.some(
         (c) => c.toLowerCase().trim() === selectedCategory.toLowerCase().trim()
       );
 
@@ -87,21 +95,15 @@ export default function ProductPage() {
     return categoryMatch && stockMatch && searchMatch;
   });
 
-  // pagination logic
   const totalPages = Math.ceil(filteredProducts.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const currentProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + pageSize
-  );
+  const currentProducts = filteredProducts.slice(startIndex, startIndex + pageSize);
 
-  // summary counts
   const totalCount = allProducts.length;
   const inStockCount = allProducts.filter((p) => p.stock >= 10).length;
   const lowStockCount = allProducts.filter((p) => p.stock > 0 && p.stock < 10).length;
   const outOfStockCount = allProducts.filter((p) => p.stock === 0).length;
 
-  // format LKR prices
   function formatLKR(value) {
     return `LKR ${Number(value).toLocaleString("en-LK", {
       minimumFractionDigits: 2,
@@ -109,6 +111,14 @@ export default function ProductPage() {
     })}`;
   }
 
+if (isLoading) {
+      return (
+          <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+              <LoadingScreen />
+          </div>
+      );
+}
+  
   return (
     <div className="relative w-full h-full max-h-full overflow-y-auto p-6">
       {/* Page Title */}
@@ -178,6 +188,7 @@ export default function ProductPage() {
               <button
                 onClick={() => setSearchQuery("")}
                 className="text-gray-500 hover:text-red-600 px-2"
+                aria-label="Clear search"
               >
                 ✕
               </button>
@@ -216,13 +227,8 @@ export default function ProductPage() {
             <tbody className="divide-y divide-slate-200">
               {currentProducts.length > 0 ? (
                 currentProducts.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-slate-50 transition duration-200 text-sm"
-                  >
-                    <td className="py-3 px-4 font-medium text-slate-700 text-sm">
-                      {item.productId}
-                    </td>
+                  <tr key={index} className="hover:bg-slate-50 transition duration-200 text-sm">
+                    <td className="py-3 px-4 font-medium text-slate-700 text-sm">{item.productId}</td>
                     <td className="py-3 px-4 text-sm">{item.name}</td>
                     <td className="py-3 px-4 text-center">
                       <img
@@ -231,15 +237,9 @@ export default function ProductPage() {
                         className="w-12 h-12 object-cover rounded-full shadow-sm"
                       />
                     </td>
-                    <td className="py-3 px-4 text-slate-600 text-sm">
-                      {item.categories?.join(", ")}
-                    </td>
-                    <td className="py-3 px-4 text-slate-700">
-                      {formatLKR(item.labelledPrice)}
-                    </td>
-                    <td className="py-3 px-4 font-semibold text-slate-800">
-                      {formatLKR(item.price)}
-                    </td>
+                    <td className="py-3 px-4 text-slate-600 text-sm">{item.categories?.join(", ")}</td>
+                    <td className="py-3 px-4 text-slate-700">{formatLKR(item.labelledPrice)}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-800">{formatLKR(item.price)}</td>
                     <td className="py-3 px-4">
                       {item.stock === 0 ? (
                         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600">
@@ -258,10 +258,8 @@ export default function ProductPage() {
                     <td className="py-3 px-4">
                       <div className="flex justify-center space-x-2">
                         <button
-                            onClick={() =>
-                                navigate("/admin/edit-product", { state: item })
-                            }
-                            className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
+                          onClick={() => navigate("/admin/edit-product", { state: item })}
+                          className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition"
                         >
                           <FaEdit size={16} />
                         </button>
@@ -271,7 +269,6 @@ export default function ProductPage() {
                         >
                           <FaTrash size={16} />
                         </button>
-
                       </div>
                     </td>
                   </tr>
@@ -318,6 +315,20 @@ export default function ProductPage() {
           )}
         </div>
       )}
+
+      {/* In-page bottom-right button (NOT floating) */}
+      <div className="mt-6 flex justify-end">
+        <button
+          onClick={() => navigate("/admin/product-analysis")}
+          className="flex items-center gap-2 rounded-lg px-5 py-3 font-semibold shadow-sm
+                     bg-dgreen text-white hover:bg-dgreen/90 active:scale-[0.98] transition"
+          aria-label="Create product analysis report"
+          title="Create Report (Product Analysis)"
+        >
+          <FiPieChart className="text-xl" />
+          Create Report
+        </button>
+      </div>
     </div>
   );
 }
