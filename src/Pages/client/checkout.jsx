@@ -9,14 +9,10 @@ export default function CheckoutPage() {
     const cart = state?.cart || [];
     const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm({ defaultValues: { deliveryMethod: "pickup" } });
 
-    const deliveryMethod = watch("deliveryMethod");
+    // ✅ Constant delivery fee for home delivery
+    const DELIVERY_FEE = 350;
+
 
     const getQty = (item) => Number(item.qty ?? item.quantity ?? 0);
     const cartTotal = useMemo(
@@ -24,19 +20,35 @@ export default function CheckoutPage() {
         [cart]
     );
 
-    async function onSubmit(data) {
+
+    // ✅ Final total including delivery fee if applicable
+    const finalTotal = useMemo(
+        () => (deliveryMethod === "home" ? cartTotal + DELIVERY_FEE : cartTotal),
+        [cartTotal, deliveryMethod]
+    );
+
+    async function placeOrder() {
         const token = localStorage.getItem("token");
         if (!token) return toast.error("Please login to place order");
+        if (!firstName.trim()) return toast.error("First name is required");
+        if (!lastName.trim()) return toast.error("Last name is required");
+        if (!/^\d{10}$/.test(phone.trim()))
+            return toast.error("Phone number must be exactly 10 digits");
+
+        if (deliveryMethod === "home") {
+            if (!street.trim()) return toast.error("Street address is required");
+            if (!city.trim()) return toast.error("City is required");
+            if (!province.trim()) return toast.error("Province is required");
+        }
         if (cart.length === 0) return toast.error("Your cart is empty");
 
         const orderInformation = {
-            name: `${data.firstName} ${data.lastName}`.trim(),
-            phone: data.phone.trim(),
-            deliveryMethod: data.deliveryMethod,
-            address:
-                data.deliveryMethod === "home"
-                    ? `${data.street} ${data.city} ${data.province}`.trim()
-                    : "",
+            name: `${firstName} ${lastName}`.trim(),
+            phone: phone.trim(),
+            deliveryMethod,
+            address: `${street} ${city} ${province}`.trim(),
+            total: finalTotal, // ✅ send final total to backend
+
             products: cart.map((c) => ({
                 productId: c.productId,
                 qty: Number(c.qty ?? c.quantity ?? 1),
@@ -270,12 +282,18 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex items-center justify-between py-3">
                                     <dt className="text-gray-600">Processing and Handling</dt>
-                                    <dd className="font-medium">Free Shipping</dd>
+                                    <dd className="font-medium">
+                                        {deliveryMethod === "home"
+                                            ? `LKR : ${DELIVERY_FEE.toFixed(2)}`
+                                            : "Free Shipping"}
+                                    </dd>
                                 </div>
                                 <div className="flex items-center justify-between py-3">
                                     <dt className="text-gray-600">Order Total</dt>
                                     <dd className="text-lg font-semibold">
-                                        LKR : {cartTotal.toFixed(2)}
+
+                                        LKR : {finalTotal.toFixed(2)}
+
                                     </dd>
                                 </div>
                             </dl>
@@ -316,11 +334,11 @@ export default function CheckoutPage() {
                                     className="mt-1 h-4 w-4 rounded border-gray-300"
                                 />
                                 <span>
-                  I have read and accept the{" "}
-                                    <a href="#" className="font-medium underline">
-                    Terms &amp; Conditions
-                  </a>
-                </span>
+
+                                    I have read and accept the{" "}
+                                    <a href="#" className="font-medium underline">Terms &amp; Conditions</a>
+                                </span>
+
                             </label>
                         </div>
                     </aside>
