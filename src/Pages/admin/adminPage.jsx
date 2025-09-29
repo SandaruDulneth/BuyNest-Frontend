@@ -188,6 +188,8 @@ export default function AdminPage() {
             <Route path="charts/top-products" element={<TopProductsPage />} />
 
             <Route path="calendar" element={<CalendarPage />} />
+            <Route path="odrp" element={<OrderReport />} />
+            <Route path="usrp" element={<UserReport />} />
 
             {/* ✅ Product Analysis route (relative) */}
             <Route path="product-analysis" element={<ProductAnalysis />} />
