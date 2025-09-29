@@ -95,11 +95,9 @@ export default function Dashboard() {
             <h1 className="text-3xl font-extrabold tracking-tight">Dashboard</h1>
 
             {/* KPIs */}
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 <KpiCard label="Total customers" value={kpis.totalCustomers} delta={kpis.deltaCustomers} />
                 <KpiCard label="Total riders" value={kpis.totalRiders} delta={kpis.deltaRiders} />
-                <KpiCard label="Total revenue" prefix="Rs. " value={kpis.totalRevenue} delta={kpis.deltaRevenue} />
-                <KpiCard label="Total profit" prefix="Rs. " value={kpis.totalProfit} delta={0} />
                 <KpiCard label="Total orders" value={kpis.totalOrders} delta={kpis.deltaOrders} />
                 <KpiCard label="Total returns" value={kpis.totalReturns} delta={kpis.deltaReturns} />
             </section>
@@ -107,7 +105,7 @@ export default function Dashboard() {
             {/* Product sales – Revenue only */}
             <section className={card}>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className={h2}>Product sales (Revenue)</h2>
+                    <h2 className={h2}>Order Sales</h2>
                     <div className="text-sm text-neutral-500">Last {series.length} days</div>
                 </div>
                 <div className="h-96">

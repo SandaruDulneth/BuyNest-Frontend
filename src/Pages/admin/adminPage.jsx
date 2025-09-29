@@ -34,6 +34,8 @@ import CalendarPage from "./CalendarPage.jsx";
 import AdminDeliveryPage from "./deliveryPage.jsx";
 import toast from "react-hot-toast";
 import axios from "axios";
+import UserReport from "./userReport.jsx";
+import OrderReport from "./orderReports.jsx";
 
 export default function AdminPage() {
     // Drawer open/close
@@ -196,6 +198,8 @@ export default function AdminPage() {
                         <Route path="/charts/line" element={<LineChartPage />} />
                         <Route path="/charts/top-products" element={<TopProductsPage />} />
                         <Route path="/calendar" element={<CalendarPage />} />
+                        <Route path="/usrp" element={<UserReport />} />
+                        <Route path="/odrp" element={<OrderReport />} />
                     </Routes>
                 </div>
             </main>

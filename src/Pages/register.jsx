@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import AuthTabs from "../components/AuthTabs.jsx";
+import {useGoogleLogin} from "@react-oauth/google";
 
 export default function RegisterPage() {
     const [firstName, setFirstName]     = useState("");
@@ -16,22 +17,51 @@ export default function RegisterPage() {
 
     async function handleRegister(e) {
         e.preventDefault();
+
         if (!agree) return toast.error("Please accept the Terms and Conditions");
         if (password !== confirmPassword) return toast.error("Passwords don’t match");
 
         try {
-            await axios.post("http://localhost:5000/api/users", {
+            const response = await axios.post("http://localhost:5000/api/users", {
                 firstName,
                 lastName,
                 email,
                 password,
             });
-            toast.success("Registration successful");
-            navigate("/login");
+
+            if (response.data.message === "User created successfully") {
+                toast.success("Registration successful");
+                navigate("/login");
+            } else {
+                // Handle failure message
+                toast.error(response.data.message || "Registration failed");
+            }
         } catch (err) {
+            // Display detailed error from the backend
             toast.error(err.response?.data?.message || "Registration failed");
         }
     }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: (response) => {
+            const accessToken = response.access_token;
+            axios
+                .post("http://localhost:5000/api/users/login/google", {
+                    accessToken: accessToken,
+                })
+                .then((response) => {
+                    toast.success("Login Successful");
+                    const token = response.data.token;
+                    localStorage.setItem("token", token);
+                    if (response.data.role === "admin") {
+                        navigate("/admin/");
+                    } else {
+                        navigate("/");
+                    }
+                });
+        },
+    });
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white font-poppins">
@@ -39,9 +69,7 @@ export default function RegisterPage() {
 
                 {/* Left image */}
                 <div className="hidden md:block bg-gray-100">
-
                     <img src="/authimage.jpeg" alt="Illustration" className="h-full w-full object-cover" />
-
                 </div>
 
                 {/* Right form */}
@@ -123,6 +151,7 @@ export default function RegisterPage() {
                     <div className="flex justify-center">
                         <button
                             type="button"
+                            onClick={googleLogin}
                             className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition"
                         >
                             <FcGoogle className="text-xl" /> Continue with Google

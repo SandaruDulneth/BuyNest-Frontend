@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import AuthTabs from "../components/AuthTabs.jsx";
+import {useGoogleLogin} from "@react-oauth/google";
 
 
 export default function LoginPage() {
@@ -26,6 +27,27 @@ export default function LoginPage() {
             toast.error(err.response?.data?.message || "Login failed");
         }
     }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: (response) => {
+            const accessToken = response.access_token;
+            axios
+                .post("http://localhost:5000/api/users/login/google", {
+                    accessToken: accessToken,
+                })
+                .then((response) => {
+                    toast.success("Login Successful");
+                    const token = response.data.token;
+                    localStorage.setItem("token", token);
+                    if (response.data.role === "admin") {
+                        navigate("/admin/");
+                    } else {
+                        navigate("/");
+                    }
+                });
+        },
+    });
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white font-poppins">
@@ -68,7 +90,7 @@ export default function LoginPage() {
                             <div className="mt-1 text-right">
                                 <button
                                     type="button"
-                                    onClick={() => toast("Forgot password route pending")}
+                                    onClick={() => navigate("/forget")}
                                     className="text-xs text-gray-500 hover:text-accent font-poppins"
                                 >
                                     Forgot your password?
@@ -92,6 +114,7 @@ export default function LoginPage() {
                         <button
                             type="button"
                             className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 transition"
+                            onClick={googleLogin}
                         >
                             <FcGoogle className="text-xl" /> Continue with Google
                         </button>
