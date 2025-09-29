@@ -6,6 +6,17 @@ import toast from "react-hot-toast";
 import { FaEdit, FaBan, FaUnlock } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 
+
+function LoadingScreen() {
+    return (
+        <div className="flex flex-col items-center justify-center h-full w-full text-emerald-700">
+            <div className="animate-spin h-12 w-12 border-4 border-emerald-400 border-t-transparent rounded-full mb-4"></div>
+            <p className="text-lg font-semibold">Loading users...</p>
+        </div>
+    );
+}
+
+
 export default function UserPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState([]);     // current working list (for current page view if you want)
@@ -152,6 +163,14 @@ export default function UserPage() {
         (u) => (u.role || "").toLowerCase() === "admin"
     ).length;
 
+    if (isLoading) {
+        return (
+            <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+                <LoadingScreen />
+            </div>
+        );
+    }
+
     return (
         <div className="relative w-full h-full max-h-full overflow-y-auto p-6  font-[var(--font-main)]">
             <h1 className="text-3xl font-bold text-dgreen  text-left mb-1">
@@ -232,6 +251,15 @@ export default function UserPage() {
                 >
                     + Add User
                 </Link>
+            </div>
+
+            <div className="mb-4 flex justify-end rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+                <button
+                    onClick={() => navigate("/admin/usrp")}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                >
+                    Create Report
+                </button>
             </div>
 
             {isLoading ? (

@@ -25,7 +25,7 @@ export default function Footer() {
           <h5 className="font-semibold mb-3 text-gray-900">Quick Links</h5>
           <ul className="space-y-2 text-sm">
             <li>
-              <NavLink to="/" className="hover:text-emerald-600">Home</NavLink>
+              <NavLink to="#" className="hover:text-emerald-600">Home</NavLink>
             </li>
             <li>
               <NavLink to="/category/All" className="hover:text-emerald-600">
@@ -33,7 +33,7 @@ export default function Footer() {
               </NavLink>
             </li>
             <li>
-              <a href="#" className="hover:text-emerald-600">Track my order</a>
+              <a href="/profile" className="hover:text-emerald-600">Profile</a>
             </li>
           </ul>
         </div>
@@ -66,11 +66,7 @@ export default function Footer() {
               </span>
             </li>
             <li><a href="#" className="hover:text-emerald-600">Terms & Conditions</a></li>
-            <li>
-              <NavLink to="/category/All" className="hover:text-emerald-600">
-                Shop
-              </NavLink>
-            </li>
+
           </ul>
         </div>
 

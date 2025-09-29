@@ -21,6 +21,7 @@ export default function BarChartPage() {
                 });
                 if (!r.ok) throw new Error(await r.text());
                 const j = await r.json();
+                console.log("Received series:", j.series);  // Add this line to check the received series
                 setSeries(j.series || []);
             } catch (e) {
                 setErr(e.message);
@@ -28,6 +29,7 @@ export default function BarChartPage() {
             setLoading(false);
         })();
     }, []);
+
 
     // 🌟 Beautiful Loading Screen
     if (loading) {

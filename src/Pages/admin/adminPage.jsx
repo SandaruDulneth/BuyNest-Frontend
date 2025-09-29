@@ -34,7 +34,12 @@ import CalendarPage from "./CalendarPage.jsx";
 import AdminDeliveryPage from "./deliveryPage.jsx";
 import toast from "react-hot-toast";
 import axios from "axios";
+
+import UserReport from "./userReport.jsx";
+import OrderReport from "./orderReports.jsx";
+
 import ProductAnalysis from "./ProductAnalysis.jsx";
+
 
 export default function AdminPage() {
   const [open, setOpen] = useState(false);
@@ -159,6 +164,7 @@ export default function AdminPage() {
 
             <Route path="reviews" element={<AdminReviewPage />} />
 
+
             <Route path="suppliers" element={<AdminSupplierPage />} />
             <Route path="add-suppliers" element={<AddSupplierPage />} />
             <Route path="edit-suppliers" element={<EditSupplierPage />} />
@@ -189,6 +195,7 @@ export default function AdminPage() {
             {/* Optional 404 inside admin */}
             <Route path="*" element={<div className="p-6 text-slate-600">Not found</div>} />
           </Routes>
+
         </div>
       </main>
 
