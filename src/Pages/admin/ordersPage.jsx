@@ -77,7 +77,7 @@ export default function AdminOrdersPage() {
         <div className="w-full h-full max-h-full overflow-y-auto p-4 md:p-6 font-[var(--font-main)]">
             {/* Header */}
             <div className="mb-5">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-emerald-800">
+                <h1 className="text-2xl md:text-3xl font-bold text-emerald-800">
                     Order Management
                 </h1>
                 <p className="text-sm text-slate-500">
@@ -141,13 +141,17 @@ export default function AdminOrdersPage() {
                                             {activeOrder.phone}
                                         </p>
                                         <p>
+                                            <span className="font-semibold">Delivery method:</span>{" "}
+                                            {activeOrder.deliveryMethod}
+                                        </p>
+                                        <p>
                                             <span className="font-semibold">Address:</span>{" "}
                                             {activeOrder.address}
                                         </p>
                                     </div>
                                     <div className="space-y-2">
                                         <p className="flex items-center gap-2">
-                                            <span className="font-semibold">Status:</span>
+                                            <span className="font-semibold rounded-full">Status:</span>
                                             <span
                                                 className={`font-bold ${
                                                     activeOrder.status === "pending"
@@ -287,6 +291,7 @@ export default function AdminOrdersPage() {
                                 <Th>Date</Th>
                                 <Th>Total</Th>
                                 <Th>Status</Th>
+                                <Th>Delivery Method</Th>
                                 <Th>Payment</Th>
                                 <Th className="text-center">Actions</Th>
                             </tr>
@@ -320,6 +325,7 @@ export default function AdminOrdersPage() {
                                             })}
                                         </Td>
                                         <Td>{statusBadge(order.status)}</Td>
+                                        <Td>{statusBadge(order.deliveryMethod)}</Td>
                                         <Td>{paymentBadge(order.paymentStatus)}</Td>
                                         <Td className="text-center">
                                             <button

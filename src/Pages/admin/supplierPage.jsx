@@ -9,7 +9,9 @@ export default function AdminSupplierPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 7; // rows per page
+
+  const pageSize = 7;
+
 
   const navigate = useNavigate();
 
@@ -23,7 +25,7 @@ export default function AdminSupplierPage() {
       []
   );
 
-  // format date nicely
+
   function formatDate(dateStr) {
     if (!dateStr) return "-";
     const date = new Date(dateStr);
@@ -69,9 +71,9 @@ export default function AdminSupplierPage() {
     }
     axios
         .delete("http://localhost:5000/api/suppliers/" + supplierId, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+
+          headers: { Authorization: "Bearer " + token },
+
         })
         .then(() => {
           toast.success("Supplier deleted successfully");
@@ -98,20 +100,12 @@ export default function AdminSupplierPage() {
       startIndex + pageSize
   );
 
-  // summaries
-  const totalSuppliers = suppliers.length;
-  const totalStock = suppliers.reduce(
-      (sum, s) => sum + (Number(s.stock) || 0),
-      0
-  );
 
-  // If `cost` is unit cost: sum(cost * stock). If stock missing/0, add just cost.
-  const totalSupplyCost = suppliers.reduce((sum, s) => {
-    const cost = typeof s.cost === "number" ? s.cost : 0;
-    const stock = Number(s.stock) || 0;
-    if (cost === 0) return sum;
-    return sum + (stock > 0 ? cost * stock : cost);
-  }, 0);
+  // summary
+  const totalSuppliers = suppliers.length;
+  const totalStock = suppliers.reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
+  const totalCost = suppliers.reduce((sum, s) => sum + (Number(s.cost) || 0), 0);
+
 
   return (
       <div className="relative w-full h-full max-h-full overflow-y-auto p-6 font-[var(--font-main)] ">
@@ -125,23 +119,14 @@ export default function AdminSupplierPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <p className="text-gray-500 text-sm">Total Suppliers</p>
-            <p className="text-2xl font-bold">{totalSuppliers}</p>
-          </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <p className="text-gray-500 text-sm">Total Stock</p>
-            <p className="text-2xl font-bold">{totalStock}</p>
-          </div>
-
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <p className="text-gray-500 text-sm">Total Supply Cost</p>
-            <p className="text-2xl font-bold">{fmt.format(totalSupplyCost)}</p>
-          </div>
+          <SummaryCard label="Total Suppliers" value={totalSuppliers} />
+          <SummaryCard label="Total Stock" value={totalStock} />
+          <SummaryCard label="Total Supply Cost" value={fmt.format(totalCost)} />
         </div>
 
-        {/* Filters Bar (search + add button) */}
+        {/* Filters Bar */}
+
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
           {/* Search Bar */}
           <div className="flex items-center border border-slate-300 rounded px-2 py-1 w-full md:w-1/2">
@@ -168,7 +153,9 @@ export default function AdminSupplierPage() {
           {/* Add Button */}
           <Link
               to="/admin/add-suppliers"
-              className="bg-dgreen hover:bg-dgreen text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
+
+              className="bg-dgreen hover:bg-dgreen/80 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition"
+
           >
             + Add Supplier
           </Link>
@@ -200,23 +187,23 @@ export default function AdminSupplierPage() {
                 {currentSuppliers.length > 0 ? (
                     currentSuppliers.map((s, index) => (
                         <tr
-                            key={index}
+
+                            key={s.supplierId || index}
                             className="hover:bg-slate-50 transition duration-200"
                         >
-                          <td className="py-3 px-4 text-sm font-semibold text-slate-700">
+                          <td className="py-3 px-4 font-medium text-slate-700">
                             {s.supplierId}
                           </td>
-                          <td className="py-3 px-4 text-sm">{s.Name || "-"}</td>
-                          <td className="py-3 px-4 text-sm">{s.email || "-"}</td>
-                          <td className="py-3 px-4 text-sm">{s.productId || "-"}</td>
-                          <td className="py-3 px-4 text-sm">{Number(s.stock) ?? 0}</td>
-                          <td className="py-3 px-4 text-sm">
+                          <td className="py-3 px-4">{s.Name || "-"}</td>
+                          <td className="py-3 px-4">{s.email || "-"}</td>
+                          <td className="py-3 px-4">{s.productId || "-"}</td>
+                          <td className="py-3 px-4">{Number(s.stock) ?? 0}</td>
+                          <td className="py-3 px-4">
                             {typeof s.cost === "number" ? fmt.format(s.cost) : "-"}
                           </td>
                           <td className="py-3 px-4">{s.contactNo || "-"}</td>
-                          <td className="py-3 px-4 text-gray-600">
-                            {formatDate(s.date)}
-                          </td>
+                          <td className="py-3 px-4 text-gray-600">{formatDate(s.date)}</td>
+
                           <td className="py-3 px-4">
                             <div className="flex justify-center space-x-2">
                               <button
@@ -285,3 +272,15 @@ export default function AdminSupplierPage() {
       </div>
   );
 }
+
+
+/* ---------- Small summary card ---------- */
+function SummaryCard({ label, value }) {
+  return (
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 text-center">
+        <p className="text-gray-500 text-sm">{label}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
+  );
+}
+
