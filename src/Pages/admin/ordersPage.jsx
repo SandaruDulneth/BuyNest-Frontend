@@ -3,12 +3,25 @@ import { useEffect, useMemo, useState } from "react";
 import Loading from "../../components/loading";
 import Modal from "react-modal";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+
+
+function LoadingScreen() {
+    return (
+        <div className="flex flex-col items-center justify-center h-full w-full text-emerald-700">
+            <div className="animate-spin h-12 w-12 border-4 border-emerald-400 border-t-transparent rounded-full mb-4"></div>
+            <p className="text-lg font-semibold">Loading Orders...</p>
+        </div>
+    );
+}
+
 
 export default function AdminOrdersPage() {
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeOrder, setActiveOrder] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isLoading) {
@@ -57,14 +70,20 @@ export default function AdminOrdersPage() {
     // Badges
     const statusBadge = (status) => {
         const s = String(status || "").toLowerCase();
-        if (s === "completed" || s === "delivered")
+
+        if (s === "completed")
+            return <Pill tone="green">Completed</Pill>;   // 🔹 show Completed
+        if (s === "delivered")
             return <Pill tone="green">Delivered</Pill>;
         if (s === "pending" || s === "processing")
             return <Pill tone="amber">{s[0].toUpperCase() + s.slice(1)}</Pill>;
-        if (s === "cancelled") return <Pill tone="rose">Cancelled</Pill>;
-        if (s === "returned") return <Pill tone="slate">Returned</Pill>;
+        if (s === "cancelled")
+            return <Pill tone="rose">Cancelled</Pill>;
+        if (s === "returned")
+            return <Pill tone="slate">Returned</Pill>;
         return <Pill tone="slate">{status || "-"}</Pill>;
     };
+
 
     const paymentBadge = (paymentStatus) => {
         const p = String(paymentStatus || "paid").toLowerCase();
@@ -72,6 +91,14 @@ export default function AdminOrdersPage() {
         if (p === "unpaid") return <Pill tone="rose">Unpaid</Pill>;
         return <Pill tone="slate">{paymentStatus || "—"}</Pill>;
     };
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+                <LoadingScreen />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full h-full max-h-full overflow-y-auto p-4 md:p-6 font-[var(--font-main)]">
@@ -102,18 +129,27 @@ export default function AdminOrdersPage() {
                     value={kpis.delivered}
                     icon={<span className="text-xl">✅</span>}
                 />
+                {/* 🔹 Changed this card only */}
                 <KpiCard
-                    title="Pending Payment"
-                    value={kpis.pendingPayment}
-                    icon={<span className="text-xl">Rs.</span>}
-                    danger
+                    title="Completed Orders"
+                    value={orders.filter(o => String(o.status).toLowerCase() === "completed").length}
+                    icon={<span className="text-xl">✔️</span>}
                 />
             </div>
+
 
             {isLoading ? (
                 <Loading />
             ) : (
                 <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div className="mb-4 flex justify-end rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+                        <button
+                            onClick={() => navigate("/admin/odrp")}
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                        >
+                            Create Report
+                        </button>
+                    </div>
                     {/* Modal */}
                     <Modal
                         isOpen={isModalOpen}
