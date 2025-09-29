@@ -1,21 +1,19 @@
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import {FiLogIn, FiSearch} from "react-icons/fi";
+import { FiLogIn, FiSearch } from "react-icons/fi";
 import { BsCart3 } from "react-icons/bs";
 import { RxAvatar } from "react-icons/rx";
 import { useState, useEffect } from "react";
 import GroceryMegaMenu from "./CategoryMenu.jsx";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export default function Header() {
-
   const navigate = useNavigate();
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
 
-
   const [cartCount, setCartCount] = useState(0);
   const [token, setToken] = useState(localStorage.getItem("token"));
-
+  const [searchTerm, setSearchTerm] = useState("");
 
   const updateCartCount = () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -23,35 +21,41 @@ export default function Header() {
     setCartCount(totalItems);
   };
 
+  useEffect(() => {
+    updateCartCount();
+    const tokenHandler = () => setToken(localStorage.getItem("token"));
+    const cartHandler = () => updateCartCount();
 
-    useEffect(() => {
-        updateCartCount();
-        const tokenHandler = () => setToken(localStorage.getItem("token"));
-        const cartHandler = () => updateCartCount();
+    if (token && typeof token === "string" && token.trim() !== "") {
+      try {
+        const decoded = jwtDecode(token);
+        setFirstName(decoded?.firstName || "");
+      } catch (err) {
+        console.error("Token decode failed:", err);
+      }
+    }
+    window.addEventListener("storage", tokenHandler);
+    window.addEventListener("cart-changed", cartHandler);
+    return () => {
+      window.removeEventListener("storage", tokenHandler);
+      window.removeEventListener("cart-changed", cartHandler);
+    };
+  }, [token]);
 
-        if (token && typeof token === "string" && token.trim() !== "") {
-            try {
-                const decoded = jwtDecode(token);
-                setFirstName(decoded?.firstName || "");
-            } catch (err) {
-                console.error("Token decode failed:", err);
-            }
-        }
-        window.addEventListener("storage", tokenHandler);
-        window.addEventListener("cart-changed", cartHandler);
-        return () => {
-            window.removeEventListener("storage", tokenHandler);
-            window.removeEventListener("cart-changed", cartHandler);
-        };
-    }, [token]);
-
-
-    const handleHotDealsClick = () => {
+  const handleHotDealsClick = () => {
     if (location.pathname !== "/") {
       navigate("/", { state: { scrollTo: "top-saver" } });
     } else {
       const target = document.getElementById("top-saver");
       if (target) target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+      setSearchTerm("");
     }
   };
 
@@ -72,10 +76,15 @@ export default function Header() {
         </NavLink>
 
         {/* Search bar */}
-        <form className="flex w-[50%] border border-accent rounded-lg overflow-hidden">
+        <form
+          onSubmit={handleSearch}
+          className="flex w-[50%] border border-accent rounded-lg overflow-hidden"
+        >
           <input
             type="text"
             placeholder="Search for products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-grow px-3 py-2 outline-none"
           />
           <button
@@ -91,31 +100,30 @@ export default function Header() {
           <NavLink
             to="/cart"
             className="relative flex items-center gap-1 hover:text-green-600"
-            >
+          >
             <BsCart3 size={22} /> Cart
             {/* dynamic cart count badge */}
             {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent text-white text-xs px-1 rounded-full">
+              <span className="absolute -top-2 -right-2 bg-accent text-white text-xs px-1 rounded-full">
                 {cartCount}
-                </span>
+              </span>
             )}
-            </NavLink>
+          </NavLink>
 
-            <NavLink
-                to={token ? "/profile" : "/login"}
-                className="flex items-center gap-2 hover:text-accent"
-            >
-                {token ? (
-                    <>
-                        <RxAvatar size={22} /> {firstName || "Profile"}
-                    </>
-                ) : (
-                    <>
-                        <FiLogIn size={22} /> Sign in
-                    </>
-                )}
-            </NavLink>
-
+          <NavLink
+            to={token ? "/profile" : "/login"}
+            className="flex items-center gap-2 hover:text-accent"
+          >
+            {token ? (
+              <>
+                <RxAvatar size={22} /> {firstName || "Profile"}
+              </>
+            ) : (
+              <>
+                <FiLogIn size={22} /> Sign in
+              </>
+            )}
+          </NavLink>
         </div>
       </div>
 
@@ -164,5 +172,4 @@ export default function Header() {
       </div>
     </header>
   );
-
 }
