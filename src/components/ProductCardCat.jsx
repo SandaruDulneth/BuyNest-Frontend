@@ -1,6 +1,8 @@
 import React from "react";
-import { FiPlus } from "react-icons/fi";
+
 import { Link } from "react-router-dom";
+import {addToCart} from "../utils/cart.js";
+
 
 export default function ProductCardCat({ product, onAddToCart }) {
   const {
@@ -12,6 +14,9 @@ export default function ProductCardCat({ product, onAddToCart }) {
     images = [],
     imageUrl: imageUrlProp,
     unit,
+
+    stock = 0,
+
   } = product ?? {};
 
   const derivedImage =
@@ -33,19 +38,40 @@ export default function ProductCardCat({ product, onAddToCart }) {
       ? Math.round(((cleanLabelled - cleanPrice) / cleanLabelled) * 100)
       : null;
 
-  // ✅ product id (from backend, could be _id or productId)
+
   const productKey = _id || productId;
 
+  // Stock badge
+  let stockLabel = null;
+  if (stock === 0) {
+    stockLabel = (
+      <span className="bg-red-600 text-white text-xs px-2 py-1 rounded">
+        Out of Stock
+      </span>
+    );
+  } else if (stock < 10) {
+    stockLabel = (
+      <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded">
+        Low Stock ({stock})
+      </span>
+    );
+  }
+
   return (
-    <div className="bg-white border rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col items-center text-center relative">
-      {/* Discount pill */}
-      {discount && discount > 0 && (
-        <span className="absolute top-2 left-2 rounded-md bg-emerald-600 px-2 py-1 text-[11px] font-semibold text-white shadow-sm">
-          {discount}% OFF
-        </span>
+    <div className="bg-white border rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col items-center text-center relative font-poppins">
+      {/* ✅ Inline top bar for badges */}
+      {(discount || stockLabel) && (
+        <div className="absolute top-2 left-2 right-2 flex justify-between items-center">
+          {discount && discount > 0 && (
+            <span className="rounded-md bg-accent px-2 py-1 text-[11px] font-semibold text-white shadow-sm">
+              {discount}% OFF
+            </span>
+          )}
+          {stockLabel}
+        </div>
       )}
 
-      {/* Wrap clickable content in Link */}
+
       <Link
         to={`/product/${productKey}`}
         className="flex flex-col items-center text-center w-full"
@@ -53,16 +79,18 @@ export default function ProductCardCat({ product, onAddToCart }) {
         <img
           src={derivedImage}
           alt={name}
-          className="h-32 object-contain mb-3"
+
+          className="h-32 object-contain mb-3 mt-6"
+
           loading="lazy"
         />
         <h3 className="font-medium text-gray-900 line-clamp-2">{name}</h3>
         {unit && <p className="text-sm text-gray-500">{unit}</p>}
       </Link>
 
-      {/* Price Section */}
       <div className="mt-2 flex items-center gap-2">
-        <span className="text-lg font-bold text-emerald-600">
+        <span className="text-lg font-bold text-accent">
+
           LKR {cleanPrice.toFixed(2)}
         </span>
         {cleanLabelled > 0 && cleanLabelled > cleanPrice && (
@@ -74,10 +102,18 @@ export default function ProductCardCat({ product, onAddToCart }) {
 
       {/* Add Button */}
       <button
-        onClick={onAddToCart}
-        className="mt-4 flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+
+        onClick={()=>addToCart(product,1)}
+        disabled={stock === 0}
+        className={`mt-4 flex items-center gap-1 px-4 py-2 rounded-lg transition
+          ${
+            stock === 0
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-accent hover:bg-accent/80 text-white"
+          }`}
       >
-         Add to Cart
+        {stock === 0 ? "Unavailable" : "Add to Cart"}
+
       </button>
     </div>
   );

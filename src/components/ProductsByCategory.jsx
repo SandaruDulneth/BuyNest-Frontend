@@ -44,7 +44,7 @@ export default function ProductsByCategory({
 
   if (state.loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-poppins">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="h-44 rounded-2xl bg-gray-100 animate-pulse" />
         ))}
@@ -53,15 +53,15 @@ export default function ProductsByCategory({
   }
 
   if (state.error) {
-    return <p className="text-red-600">Error: {state.error}</p>;
+    return <p className="text-red-600 font-poppins">Error: {state.error}</p>;
   }
 
   if (products.length === 0) {
-    return <p className="text-gray-600">No products found in <b>{category}</b></p>;
+    return <p className="text-gray-600 font-poppins">No products found in <b>{category}</b></p>;
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7 font-poppins">
       {products.map((p) => (
         <CardComponent
           key={p._id || p.productId}

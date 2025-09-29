@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AddFaqPage() {
-    const [faqId, setFaqId] = useState("");
+
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [submitting, setSubmitting] = useState(false);
@@ -21,13 +21,12 @@ export default function AddFaqPage() {
             return;
         }
 
-        if (!faqId.trim() || !question.trim() || !answer.trim()) {
+        if ( !question.trim() || !answer.trim()) {
             toast.error("Please fill all required fields");
             return;
         }
 
         const body = {
-            faqId: faqId.trim(),
             question: question.trim(),
             answer: answer.trim(),
         };
@@ -67,15 +66,10 @@ export default function AddFaqPage() {
                 <div className="p-4 md:p-6 space-y-5">
                     {/* Row 1 */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Field
-                            label="FAQ ID *"
-                            placeholder="FAQ-001"
-                            value={faqId}
-                            onChange={setFaqId}
-                        />
+
                         <div className="flex flex-col justify-end">
                             <p className="text-xs text-slate-500">
-                                Use a unique identifier (e.g., <span className="font-semibold">FAQ-101</span>).
+                                identifier is auto-generating
                             </p>
                         </div>
                     </div>
@@ -135,6 +129,7 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
             <input
                 type={type}
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
@@ -150,6 +145,7 @@ function TextareaField({ label, value, onChange, placeholder, rows = 5 }) {
             <textarea
                 rows={rows}
                 value={value}
+                required
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"

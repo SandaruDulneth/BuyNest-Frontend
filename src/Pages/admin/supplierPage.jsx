@@ -32,6 +32,7 @@ function LoadingScreen() {
 }
 
 export default function AdminSupplierPage() {
+
     const [suppliers, setSuppliers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +41,7 @@ export default function AdminSupplierPage() {
 
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
+
 
     const navigate = useNavigate();
     const fmt = useMemo(
@@ -106,6 +108,7 @@ export default function AdminSupplierPage() {
                 toast.error(e.response?.data?.message || "Failed to delete Supplier");
             });
     }
+
 
     // Filters & pagination
     const filteredSuppliers = suppliers.filter(
@@ -176,6 +179,7 @@ export default function AdminSupplierPage() {
         doc.setFontSize(10);
         doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth - 15, 20, {
             align: "right",
+
         });
 
         const fromTxt = fromDate.toLocaleDateString();
@@ -236,6 +240,7 @@ export default function AdminSupplierPage() {
         );
 
     return (
+
         <div className="relative w-full h-full p-6 font-[var(--font-main)]">
             {/* ---- Title ---- */}
             <div className="mb-6">
@@ -281,6 +286,7 @@ export default function AdminSupplierPage() {
                     + Add Supplier
                 </Link>
             </div>
+
 
             {/* ---- Date Range + Create Report ---- */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mt-4 mb-6">
@@ -328,8 +334,10 @@ export default function AdminSupplierPage() {
 
             {/* ---- Supplier Table ---- */}
             <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+
                 <table className="min-w-full text-sm md:text-base">
                     <thead className="bg-slate-50 text-slate-600">
+
                     <tr>
                         <th className="py-3 px-4 text-xs font-semibold uppercase">
                             Supplier ID
@@ -435,7 +443,7 @@ export default function AdminSupplierPage() {
     );
 }
 
-/* ---------- Summary Card ---------- */
+
 function SummaryCard({ label, value }) {
     return (
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 text-center">
@@ -444,3 +452,4 @@ function SummaryCard({ label, value }) {
         </div>
     );
 }
+

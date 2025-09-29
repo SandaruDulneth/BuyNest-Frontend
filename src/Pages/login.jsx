@@ -28,17 +28,16 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="min-h-screen flex items-center justify-center bg-white font-poppins">
             <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden shadow-md border border-gray-200">
 
                 {/* Left image */}
                 <div className="hidden md:block bg-gray-100">
-                    <img src="/authimage.jpeg" alt="Illustration" className="h-full w-full object-cover" />
+                    <img src="/authimage1.jpeg" alt="Illustration" className="h-full w-full object-cover" />
                 </div>
 
                 {/* Right form */}
-                <div className="p-8 bg-white">
-                    {/* Tabs */}
+                <div className="p-8 bg-white font-poppins">
                     <AuthTabs />
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -63,13 +62,14 @@ export default function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent"
                                 required
+
                             />
                             {/* Forgot password */}
                             <div className="mt-1 text-right">
                                 <button
                                     type="button"
                                     onClick={() => toast("Forgot password route pending")}
-                                    className="text-xs text-gray-500 hover:text-accent"
+                                    className="text-xs text-gray-500 hover:text-accent font-poppins"
                                 >
                                     Forgot your password?
                                 </button>

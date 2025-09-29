@@ -7,6 +7,7 @@ export default function EditSupplierPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+
   const [supplierId] = useState(location.state.supplierId);
   const [productId] = useState(location.state.productId);
   const [email, setEmail] = useState(location.state.email || "");
@@ -37,21 +38,26 @@ export default function EditSupplierPage() {
     };
 
     try {
+
       setSubmitting(true);
       await axios.put(`http://localhost:5000/api/suppliers/${supplierId}`, body, {
         headers: { Authorization: "Bearer " + token },
       });
       toast.success("✅ Supplier updated successfully");
+
       navigate("/admin/suppliers");
     } catch (e) {
       toast.error(e?.response?.data?.message || "Failed to update supplier");
       console.error(e);
+
     } finally {
       setSubmitting(false);
+
     }
   }
 
   return (
+
       <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6 font-[var(--font-main)]">
         {/* Page header */}
         <div className="mx-auto max-w-3xl mb-4 text-center">
@@ -188,5 +194,6 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
+
   );
 }

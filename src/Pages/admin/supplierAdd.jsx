@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -12,6 +13,7 @@ export default function AddSupplierPage() {
   const [cost, setCost]               = useState("");
   const [contactNo, setContactNo]     = useState("");
   const [submitting, setSubmitting]   = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -33,21 +35,25 @@ export default function AddSupplierPage() {
 
     const payload = {
       supplierId: supplierId.trim(),
+
       productId : productId.trim(),
       email     : email.trim(),
       Name      : name.trim(),              // backend expects capital N
       stock     : Number(stock) || 0,
       cost      : Number(cost) || 0,
       contactNo : contactNo.trim(),
+
     };
 
     try {
       setSubmitting(true);
       await axios.post("http://localhost:5000/api/suppliers", payload, {
+
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
+
       });
       toast.success("Supplier added successfully");
       navigate("/admin/suppliers");
@@ -63,7 +69,9 @@ export default function AddSupplierPage() {
       <div className="w-full h-full overflow-y-auto py-6 px-3 md:px-6 font-[var(--font-main)]">
         {/* Page header */}
         <div className="mx-auto max-w-3xl mb-4 text-center">
+
           <h1 className="text-2xl md:text-3xl font-bold text-dgreen">Add New Supplier</h1>
+
           <p className="text-sm text-slate-500 mt-1">
             Enter supplier details including product, contact, pricing, and stock.
           </p>
@@ -80,7 +88,9 @@ export default function AddSupplierPage() {
               <Field
                   label="Supplier ID *"
 
+
                   placeholder="001"
+
 
                   value={supplierId}
                   onChange={setSupplierId}
@@ -130,7 +140,9 @@ export default function AddSupplierPage() {
               <Field
                   label="Contact No"
 
+
                   placeholder="071 123 4567"
+
 
                   value={contactNo}
                   onChange={setContactNo}
@@ -139,7 +151,9 @@ export default function AddSupplierPage() {
 
             {/* Helper tip */}
             <div className="text-[11px] text-slate-400">
+
               Tip: Use consistent IDs (e.g., <span className="font-semibold">SUP-101</span>) and ensure the product ID exists.
+
             </div>
           </div>
 
@@ -182,7 +196,9 @@ function Field({ label, value, onChange, placeholder, type = "text" }) {
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
 
+
             required
+
 
             className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
@@ -199,6 +215,7 @@ function NumberField({ label, value, onChange, placeholder, min, step }) {
             value={value}
             min={min}
             step={step}
+
 
             required
 

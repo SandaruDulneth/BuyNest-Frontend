@@ -6,7 +6,7 @@ export default function AuthTabs() {
     const isLogin = location.pathname === "/login";
 
     return (
-        <div className="flex items-center gap-6 text-sm font-semibold border-b border-gray-200 mb-6">
+        <div className="flex items-center gap-6 text-sm font-semibold border-b border-gray-200 mb-6 font-poppins">
             {/* Back arrow */}
             <Link
                 to="/"
