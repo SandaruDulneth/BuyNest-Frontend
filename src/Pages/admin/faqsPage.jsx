@@ -5,6 +5,15 @@ import toast from "react-hot-toast";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiFilter, FiRefreshCw, FiSearch, FiPlus } from "react-icons/fi";
 
+function LoadingScreen() {
+    return (
+        <div className="flex flex-col items-center justify-center h-full w-full text-emerald-700">
+            <div className="animate-spin h-12 w-12 border-4 border-emerald-400 border-t-transparent rounded-full mb-4"></div>
+            <p className="text-lg font-semibold">Loading Faqs...</p>
+        </div>
+    );
+}
+
 export default function AdminFaqPage() {
     const [faqs, setFaqs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -82,6 +91,15 @@ export default function AdminFaqPage() {
 
     const clearFilters = () => setQ("");
 
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-[calc(100vh-4rem)] flex items-center justify-center">
+                <LoadingScreen />
+            </div>
+        );
+    }
+
     return (
         <div className="w-full h-full max-h-full overflow-y-auto p-4 md:p-6 font-[var(--font-main)]">
             {/* Header + primary action */}
@@ -105,9 +123,9 @@ export default function AdminFaqPage() {
             </div>
 
             {/* KPI cards */}
-            <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mb-6 grid grid-cols-1 sm:grid-cols-1 gap-4">
                 <KpiCard title="Total FAQs" value={kpis.total} />
-                <KpiCard title="Unanswered" value={kpis.unanswered} />
+
             </div>
 
             {/* Filter toolbar */}
