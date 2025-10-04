@@ -1,19 +1,57 @@
-import {Route, Routes} from "react-router-dom";
-import HomePage from "./home.jsx";
+import { Routes, Route, useParams } from "react-router-dom";
 import Header from "../../components/header.jsx";
-import Test from "./test.jsx";
+import Footer from "../../components/Footer.jsx";
+import Home from "./home.jsx";
+import CategoryPage from "./CategoryPage.jsx";
+import ProductOverview from "./ProductOverview.jsx";
+import CartPage from "./cart.jsx";
+import CheckoutPage from "./checkout.jsx";
+import ProfilePage from "./profile.jsx";
+import ContactUs from "./ContactUs.jsx";
+import FaqWidget from "../../components/FaqWidget.jsx"; 
+import AboutUs from "./AboutUs.jsx"; // ✅ added
+import SearchPage from "./SearchPage.jsx"; // ✅ new import
+
+function CategoryWrapper() {
+  const { slug } = useParams();
+
+  // Convert slug back to category name
+  let category = decodeURIComponent(slug.replace(/-/g, " "));
+  category = category.replace(/\band\b/gi, "&");
+
+  return <CategoryPage title={category} category={category} />;
+}
 
 export default function CR() {
   return (
-    <div className="w-full min-h-screen flex flex-col bg-white">
+    <div className="flex flex-col min-h-screen font-poppins">
+      {/* Header always at top */}
       <Header />
-      <div className="w-full flex-1">
+
+      {/* Page content fills remaining space */}
+      <div className="flex-grow">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-            <Route path="/test" element={<Test/>} />
-          <Route path="/*" element={<h1>404 Not Found</h1>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/category/:slug" element={<CategoryWrapper />} />
+          <Route path="/product/:id" element={<ProductOverview />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+             <Route path="/contact" element={<ContactUs />} />
+             <Route path="/about" element={<AboutUs />} /> {/* ✅ added */}
+            {/* Search route */}
+            <Route path="/search" element={<SearchPage />} />
+          <Route
+            path="*"
+            element={<p className="p-8">404 - Page not found</p>}
+          />
         </Routes>
       </div>
+
+      {/* Footer always at bottom */}
+      <Footer />
+       {/* ✅ Floating FAQ Widget */}
+      <FaqWidget />
     </div>
   );
 }

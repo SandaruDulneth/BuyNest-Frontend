@@ -15,7 +15,11 @@ function chunkArray(arr, size) {
     return out;
 }
 function slugify(s) {
-    return s.toLowerCase().trim().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return s.toLowerCase()
+    .trim()
+    .replace(/&/g, "-and-")      // 👈 mark & as "-and-" instead of removing
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 export default function GroceryMegaMenu() {
@@ -64,7 +68,7 @@ export default function GroceryMegaMenu() {
             {/* Panel */}
             {open && (
                 <div
-                    className="absolute left-0 top-full mt-2 w-[min(2000px,95vw)] rounded-2xl border border-gray-200 bg-white/90 shadow-xl z-50"
+                    className="absolute left-0 top-full mt-2 w-[min(2000px,95vw)] rounded-2xl border border-gray-200 bg-white/90 shadow-xl z-50 font-poppins"
                     role="menu"
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8">
