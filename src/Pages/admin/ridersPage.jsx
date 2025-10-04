@@ -90,7 +90,7 @@ export default function AdminRiderPage() {
 
     // Socket for live updates
     useEffect(() => {
-        const socket = io("import.meta.env.VITE_BACKEND_URL", {
+        const socket = io(import.meta.env.VITE_BACKEND_URL, {
             transports: ["websocket", "polling"],  // fallback
             withCredentials: true,
         });
