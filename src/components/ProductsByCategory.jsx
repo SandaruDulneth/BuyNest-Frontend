@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "./ProductCard"; // keep for default
 
-export default function ProductsByCategory({ category, apiBase = "http://localhost:5000" }) {
+export default function ProductsByCategory({
+  category,
+  apiBase = import.meta.env.VITE_BACKEND_URL,
+  CardComponent = ProductCard, // 👈 default to old ProductCard
+}) {
   const [products, setProducts] = useState([]);
   const [state, setState] = useState({ loading: true, error: null });
 
@@ -40,7 +44,7 @@ export default function ProductsByCategory({ category, apiBase = "http://localho
 
   if (state.loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-poppins">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="h-44 rounded-2xl bg-gray-100 animate-pulse" />
         ))}
@@ -49,17 +53,17 @@ export default function ProductsByCategory({ category, apiBase = "http://localho
   }
 
   if (state.error) {
-    return <p className="text-red-600">Error: {state.error}</p>;
+    return <p className="text-red-600 font-poppins">Error: {state.error}</p>;
   }
 
   if (products.length === 0) {
-    return <p className="text-gray-600">No products found in <b>{category}</b></p>;
+    return <p className="text-gray-600 font-poppins">No products found in <b>{category}</b></p>;
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7 font-poppins">
       {products.map((p) => (
-        <ProductCard
+        <CardComponent
           key={p._id || p.productId}
           product={p}
           onAddToCart={() => console.log("add to cart", p._id || p.productId)}
