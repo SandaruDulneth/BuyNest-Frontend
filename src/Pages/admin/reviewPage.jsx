@@ -203,7 +203,7 @@ export default function AdminReviewPage() {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/reviews/reply", {
+      await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/reviews/reply", {
         email: replyingReview.email,
         usersName: replyingReview.usersName,
         rating: replyingReview.rating,
