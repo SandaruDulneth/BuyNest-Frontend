@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "../../components/Header.jsx";
+import Header from "../../components/header.jsx";
 import Footer from "../../components/Footer.jsx";
 import toast from "react-hot-toast";
 
