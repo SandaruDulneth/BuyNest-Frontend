@@ -66,6 +66,7 @@ export default function CheckoutPage() {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             toast.success("Order placed successfully");
+            toast.success("QR generated successfully");
             localStorage.removeItem("cart");
             setTimeout(() => navigate("/"), 2000);
 

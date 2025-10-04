@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import {
     FiCheckCircle,
     FiPackage,
@@ -73,14 +74,15 @@ export default function AdminDeliveryPage() {
 
     async function fetchRiders() {
         try {
-            const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/riders", {
+            const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/delivery/active-riders", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setRiders(res.data || []);
         } catch {
-            toast.error("Failed to load riders");
+            toast.error("Failed to load active riders");
         }
     }
+
 
     async function assignRider(deliveryId, riderId) {
         try {
@@ -403,6 +405,7 @@ export default function AdminDeliveryPage() {
                                             </option>
                                         ))}
                                 </select>
+
                             </Td>
                         </tr>
                     ))}

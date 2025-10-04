@@ -16,6 +16,8 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import autoTable from "jspdf-autotable";
+import { io } from "socket.io-client";
+
 
 function LoadingScreen() {
     return (
@@ -37,6 +39,112 @@ export default function AdminRiderPage() {
 
     const PAGE_SIZE = 10;
     const [page, setPage] = useState(1);
+
+    const [map, setMap] = useState(null);
+    const [markers, setMarkers] = useState({}); // riderId -> google.maps.Marker
+
+    // Load Google Maps script
+    useEffect(() => {
+        const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
+        const url = `https://maps.googleapis.com/maps/api/js?key=${key}`;
+        if (document.getElementById("gmaps-sdk")) return;
+        const s = document.createElement("script");
+        s.src = url;
+        s.async = true;
+        s.defer = true;
+        s.id = "gmaps-sdk";
+
+        s.onload = () => initMap();
+        document.body.appendChild(s);
+    }, []);
+
+    function initMap() {
+        const el = document.getElementById("delivery-map");
+        if (!el || !window.google) return;
+        const m = new window.google.maps.Map(el, {
+            center: { lat: 6.9271, lng: 79.8612 }, // Colombo default
+            zoom: 11,
+            mapTypeControl: false,
+            streetViewControl: false,
+        });
+        setMap(m);
+    }
+
+    // Initial load of latest locations
+    useEffect(() => {
+        if (!map) return;
+        (async () => {
+            try {
+                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/tracking/locations", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                (res.data || []).forEach((loc) => {
+                    upsertMarker(loc);
+                });
+            } catch (e) {
+                // silent fail in UI
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [map]);
+
+    // Socket for live updates
+    useEffect(() => {
+        const socket = io("import.meta.env.VITE_BACKEND_URL", {
+            transports: ["websocket", "polling"],  // fallback
+            withCredentials: true,
+        });
+
+        socket.on("connect", () => {
+            console.log("✅ Connected to socket:", socket.id);
+        });
+
+        socket.on("riderLocation", (loc) => {
+            upsertMarker(loc);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("❌ Socket disconnected");
+        });
+
+
+
+
+        return () => socket.disconnect();
+    }, [map]);
+
+
+    function upsertMarker(loc) {
+        if (!map || !window.google || !loc?.lat || !loc?.lng) return;
+
+        // Find rider’s name from riders list if available
+        const riderName = riders.find(r => r.riderId === loc.riderId)?.Name || loc.riderId;
+
+        setMarkers((prev) => {
+            const existing = prev[loc.riderId];
+            if (existing) {
+                existing.setPosition({ lat: loc.lat, lng: loc.lng });
+                existing.setTitle(`${riderName}`);
+                return prev;
+            } else {
+                const marker = new window.google.maps.Marker({
+                    position: { lat: loc.lat, lng: loc.lng },
+                    map,
+                    title: `${riderName}`,
+                });
+                const info = new window.google.maps.InfoWindow({
+                    content: `<div style="min-width:160px">
+                        <b>${riderName}</b><br/>
+                        ${loc.lat.toFixed(5)}, ${loc.lng.toFixed(5)}<br/>
+                        <small>${new Date(loc.timestamp).toLocaleString()}</small>
+                    </div>`
+                });
+                marker.addListener("click", () => info.open({ anchor: marker, map }));
+                return { ...prev, [loc.riderId]: marker };
+            }
+        });
+    }
+
 
     // ---------- Fetch Riders ----------
     useEffect(() => {
@@ -65,7 +173,7 @@ export default function AdminRiderPage() {
             return;
         }
         axios
-            .delete(`http://localhost:5000/api/riders/${riderId}`, {
+            .delete(`${import.meta.env.VITE_BACKEND_URL}/api/riders/${riderId}`, {
                 headers: { Authorization: "Bearer " + token },
             })
             .then(() => {
@@ -76,6 +184,36 @@ export default function AdminRiderPage() {
                 toast.error(e.response?.data?.message || "Failed to delete rider")
             );
     }
+    async function startTracking(rider) {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/tracking/start/${rider.riderId}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success("Tracking link generated");
+            await navigator.clipboard.writeText(res.data.trackingUrl);
+            toast.success("Link copied to clipboard");
+        } catch (e) {
+            toast.error(e?.response?.data?.message || "Failed to start tracking");
+        }
+    }
+
+    async function stopTracking(rider) {
+        try {
+            const token = localStorage.getItem("token");
+            await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/tracking/stop/${rider.riderId}`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success("Tracking stopped");
+        } catch (e) {
+            toast.error(e?.response?.data?.message || "Failed to stop tracking");
+        }
+    }
+
 
     const { total, activeCount, inactiveCount } = useMemo(() => {
         const total = riders.length;
@@ -258,6 +396,15 @@ export default function AdminRiderPage() {
                     Create Report
                 </button>
             </div>
+            {/* Live Map Panel */}
+            <section className="rounded-xl border border-neutral-200 bg-white shadow-sm p-4">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="font-semibold text-lg">Rider Live Map</h2>
+                    <p className="text-sm text-slate-500">Shows riders who are sharing their location</p>
+                </div>
+                <div id="delivery-map" className="w-full h-[420px] rounded-lg" />
+            </section>
+
 
             {/* Riders Table */}
             <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
@@ -279,27 +426,47 @@ export default function AdminRiderPage() {
                             const key = r.riderId || r._id || index;
                             const isActive = !!r.status;
                             return (
-                                <tr key={key} className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+                                <tr
+                                    key={key}
+                                    className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}
+                                >
                                     <Td>{r.riderId}</Td>
                                     <Td>{r.Name || "-"}</Td>
                                     <Td>{r.email || "-"}</Td>
                                     <Td>{r.contactNo || "-"}</Td>
                                     <Td>{r.vehicleType || "-"}</Td>
                                     <Td>
-                      <span
-                          className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                              isActive
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-amber-100 text-amber-700"
-                          }`}
-                      >
-                        {isActive ? "Active" : "Inactive"}
-                      </span>
+                <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                        isActive
+                            ? "bg-green-100 text-green-700"
+                            : "bg-amber-100 text-amber-700"
+                    }`}
+                >
+                  {isActive ? "Active" : "Inactive"}
+                </span>
                                     </Td>
                                     <Td className="text-center">
                                         <div className="inline-flex items-center gap-3">
                                             <button
-                                                onClick={() => navigate("/admin/edit-riders", { state: r })}
+                                                onClick={() => startTracking(r)}
+                                                className="p-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600"
+                                                title="Start Tracking (copy link)"
+                                            >
+                                                ▶
+                                            </button>
+                                            <button
+                                                onClick={() => stopTracking(r)}
+                                                className="p-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-600"
+                                                title="Stop Tracking"
+                                            >
+                                                ⏹
+                                            </button>
+
+                                            <button
+                                                onClick={() =>
+                                                    navigate("/admin/edit-riders", { state: r })
+                                                }
                                                 className="p-2 rounded-full bg-slate-100 hover:bg-slate-200"
                                                 title="Edit"
                                             >
@@ -320,7 +487,33 @@ export default function AdminRiderPage() {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination controls */}
+                <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3">
+                    <button
+                        onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                        disabled={page === 1}
+                        className="px-3 py-1 rounded-lg border bg-white text-sm text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+                    >
+                        ← Previous
+                    </button>
+                    <span className="text-sm text-slate-600">
+      Page {page} of {Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))}
+    </span>
+                    <button
+                        onClick={() =>
+                            setPage((p) =>
+                                p < Math.ceil(filtered.length / PAGE_SIZE) ? p + 1 : p
+                            )
+                        }
+                        disabled={page >= Math.ceil(filtered.length / PAGE_SIZE)}
+                        className="px-3 py-1 rounded-lg border bg-white text-sm text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+                    >
+                        Next →
+                    </button>
+                </div>
             </div>
+
 
             {/* Report Modal */}
             <Transition appear show={reportOpen} as={Fragment}>
