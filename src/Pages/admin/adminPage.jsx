@@ -66,7 +66,7 @@ export default function AdminPage() {
       window.location.href = "/login";
     } else {
       axios
-        .get("http://localhost:5000/api/users/req", {
+        .get(import.meta.env.VITE_BACKEND_URL+"/api/users/req", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {

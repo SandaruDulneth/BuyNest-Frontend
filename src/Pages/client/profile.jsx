@@ -41,7 +41,7 @@ export default function ProfilePage() {
         });
 
         axios
-            .get("http://localhost:5000/api/orders/my-orders", {
+            .get(import.meta.env.VITE_BACKEND_URL+"/api/orders/my-orders", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then((res) => {
@@ -108,7 +108,7 @@ export default function ProfilePage() {
 
         try {
             const response = await axios.put(
-                `http://localhost:5000/api/users/profile/${me.userId}`,
+                import.meta.env.VITE_BACKEND_URL+"/api/users/profile/${me.userId}",
                 editForm,
                 {
                     headers: { Authorization: `Bearer ${token}` }

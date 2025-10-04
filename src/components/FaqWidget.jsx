@@ -7,7 +7,7 @@ export default function FaqWidget() {
 
   // Fetch FAQs from backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/faqs")
+    fetch(import.meta.env.VITE_BACKEND_URL+"/api/faqs")
       .then((res) => res.json())
       .then((data) => setFaqs(data.faqs || []))
       .catch((err) => console.error(err));

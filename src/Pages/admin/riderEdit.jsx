@@ -44,7 +44,7 @@ export default function EditRiderPage() {
 
         try {
             setSubmitting(true);
-            await axios.put(`http://localhost:5000/api/riders/${riderId}`, body, {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/riders/${riderId}`, body, {
                 headers: { Authorization: "Bearer " + token },
             });
             toast.success("Rider updated successfully");

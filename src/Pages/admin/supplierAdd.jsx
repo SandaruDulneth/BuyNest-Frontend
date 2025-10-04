@@ -47,7 +47,7 @@ export default function AddSupplierPage() {
 
     try {
       setSubmitting(true);
-      await axios.post("http://localhost:5000/api/suppliers", payload, {
+      await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/suppliers", payload, {
 
         headers: {
           Authorization: "Bearer " + token,

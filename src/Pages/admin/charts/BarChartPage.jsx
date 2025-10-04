@@ -12,7 +12,7 @@ export default function BarChartPage() {
     useEffect(() => {
         (async () => {
             try {
-                const r = await fetch("http://localhost:5000/api/dashboard/overview", {
+                const r = await fetch(import.meta.env.VITE_BACKEND_URL+"/api/dashboard/overview", {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem("token") || ""}`,

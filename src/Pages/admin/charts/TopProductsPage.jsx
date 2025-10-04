@@ -17,7 +17,7 @@ export default function TopProductsPage() {
     useEffect(() => {
         (async () => {
             try {
-                const r = await fetch("http://localhost:5000/api/dashboard/top-products", {
+                const r = await fetch(import.meta.env.VITE_BACKEND_URL+"/api/dashboard/top-products", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
                     },

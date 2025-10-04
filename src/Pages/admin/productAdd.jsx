@@ -96,7 +96,7 @@ export default function AddProductPage() {
         stock: Number(stock) || 0,
       };
 
-      await axios.post("http://localhost:5000/api/products", payload, {
+      await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/products", payload, {
         headers: { Authorization: "Bearer " + token },
       });
 

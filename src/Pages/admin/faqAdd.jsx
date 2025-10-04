@@ -33,7 +33,7 @@ export default function AddFaqPage() {
 
         try {
             setSubmitting(true);
-            await axios.post("http://localhost:5000/api/faqs", body, {
+            await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/faqs", body, {
                 headers: { Authorization: "Bearer " + token },
             });
             toast.success("FAQ added successfully");

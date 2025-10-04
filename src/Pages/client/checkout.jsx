@@ -61,7 +61,7 @@ export default function CheckoutPage() {
 
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/orders",
+                import.meta.env.VITE_BACKEND_URL+"/api/orders",
                 orderInformation,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
                 const orderId = res.data.orderId;
 
                 await axios.post(
-                    "http://localhost:5000/api/delivery",
+                    import.meta.env.VITE_BACKEND_URL+"/api/delivery",
                     { orderId, phone },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );

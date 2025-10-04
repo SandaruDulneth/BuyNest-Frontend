@@ -49,7 +49,7 @@ export default function AddUserPage() {
         try {
             setSubmitting(true);
             const user = { firstName: fn, lastName: ln, email: em, password: pw, role };
-            await axios.post("http://localhost:5000/api/users", user, {
+            await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users", user, {
                 headers: { Authorization: "Bearer " + token },
             });
             toast.success("User added successfully!");

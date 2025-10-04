@@ -31,7 +31,7 @@ export default function AdminOrdersPage() {
                 return;
             }
             axios
-                .get("http://localhost:5000/api/orders", {
+                .get(import.meta.env.VITE_BACKEND_URL+"/api/orders", {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {

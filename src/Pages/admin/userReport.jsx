@@ -14,7 +14,7 @@ const UserReportsPage = () => {
     // Fetch User Stats based on the view (day/week/month)
     const fetchUserStats = async (view) => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/dashboard/user-enrollment?view=${view}`);
+            const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/dashboard/user-enrollment?view=${view}`);
             setUserStats(data);
         } catch (error) {
             console.error("Error fetching user stats:", error);
@@ -24,7 +24,7 @@ const UserReportsPage = () => {
     // Fetch Top Customers Data
     const fetchTopCustomers = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/dashboard/top-customers");
+            const { data } = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/dashboard/top-customers");
             setTopCustomers(data);
         } catch (error) {
             console.error("Error fetching top customers:", error);

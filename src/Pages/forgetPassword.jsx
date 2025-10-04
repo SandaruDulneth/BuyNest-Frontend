@@ -24,9 +24,11 @@ export default function ForgetPasswordPage() {
         e?.preventDefault();
         if (!email) return toast.error("Please enter your email.");
         setLoading(true);
+        console.log("Backend URL is:", import.meta.env.VITE_BACKEND_URL);
+
         try {
             await axios.post(
-                `http://localhost:5000/api/users/send-otp`,
+                import.meta.env.VITE_BACKEND_URL+"/api/users/send-otp",
                 { email }
             );
             setOtpSent(true);
@@ -57,7 +59,7 @@ export default function ForgetPasswordPage() {
         setLoading(true);
         try {
             await axios.post(
-                `http://localhost:5000/api/users/reset-password`,
+                import.meta.env.VITE_BACKEND_URL+"/api/users/reset-password",
                 {
                     email,
                     otp: parseInt(otp, 10),
