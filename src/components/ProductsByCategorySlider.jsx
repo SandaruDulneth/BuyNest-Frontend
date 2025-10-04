@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function ProductsByCategorySlider({
   category,
-  apiBase = "http://localhost:5000",
+  apiBase = import.meta.env.VITE_BACKEND_URL,
 }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

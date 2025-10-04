@@ -22,7 +22,7 @@ export default function RegisterPage() {
         if (password !== confirmPassword) return toast.error("Passwords don’t match");
 
         try {
-            const response = await axios.post("http://localhost:5000/api/users", {
+            const response = await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users", {
                 firstName,
                 lastName,
                 email,
@@ -46,7 +46,7 @@ export default function RegisterPage() {
         onSuccess: (response) => {
             const accessToken = response.access_token;
             axios
-                .post("http://localhost:5000/api/users/login/google", {
+                .post(import.meta.env.VITE_BACKEND_URL+"/api/users/login/google", {
                     accessToken: accessToken,
                 })
                 .then((response) => {

@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import {addToCart} from "../../utils/cart.js";
 
 
-export default function ProductOverview({ apiBase = "http://localhost:5000" }) {
+export default function ProductOverview({ apiBase = import.meta.env.VITE_BACKEND_URL }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [state, setState] = useState({ loading: true, error: null });

@@ -34,7 +34,7 @@ export default function EditUserPage() {
                 return;
             }
             try {
-                const res = await axios.get(`http://localhost:5000/api/users/${userIdFromParams}`, {
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/${userIdFromParams}`, {
                     headers: { Authorization: "Bearer " + token },
                 });
                 const u = res.data || {};

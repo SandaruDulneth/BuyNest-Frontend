@@ -114,7 +114,7 @@ export default function EditProductPage() {
         stock: Number(stock) || 0,
       };
 
-      await axios.put(`http://localhost:5000/api/products/${productId}`, payload, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`, payload, {
         headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
       });
 

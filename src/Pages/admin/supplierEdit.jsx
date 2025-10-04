@@ -40,7 +40,7 @@ export default function EditSupplierPage() {
     try {
 
       setSubmitting(true);
-      await axios.put(`http://localhost:5000/api/suppliers/${supplierId}`, body, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/suppliers/${supplierId}`, body, {
         headers: { Authorization: "Bearer " + token },
       });
       toast.success("✅ Supplier updated successfully");

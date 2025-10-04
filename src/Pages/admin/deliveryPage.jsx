@@ -62,7 +62,7 @@ export default function AdminDeliveryPage() {
 
     async function fetchDeliveries() {
         try {
-            const res = await axios.get("http://localhost:5000/api/delivery", {
+            const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/delivery", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setDeliveries(res.data.deliveries || []);
@@ -73,7 +73,7 @@ export default function AdminDeliveryPage() {
 
     async function fetchRiders() {
         try {
-            const res = await axios.get("http://localhost:5000/api/riders", {
+            const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/riders", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setRiders(res.data || []);
@@ -85,7 +85,7 @@ export default function AdminDeliveryPage() {
     async function assignRider(deliveryId, riderId) {
         try {
             await axios.put(
-                `http://localhost:5000/api/delivery/${deliveryId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/delivery/${deliveryId}`,
                 { riderId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

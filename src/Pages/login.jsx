@@ -15,7 +15,7 @@ export default function LoginPage() {
     async function handleSubmit(e) {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/users/login", {
+            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users/login", {
                 email,
                 password,
             });
@@ -32,7 +32,7 @@ export default function LoginPage() {
         onSuccess: (response) => {
             const accessToken = response.access_token;
             axios
-                .post("http://localhost:5000/api/users/login/google", {
+                .post(import.meta.env.VITE_BACKEND_URL+"/api/users/login/google", {
                     accessToken: accessToken,
                 })
                 .then((response) => {

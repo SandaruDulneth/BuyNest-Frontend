@@ -74,8 +74,8 @@ export default function ProductAnalysis() {
       return;
     }
     Promise.all([
-      axios.get("http://localhost:5000/api/orders", { headers: { Authorization: "Bearer " + token } }),
-      axios.get("http://localhost:5000/api/suppliers", { headers: { Authorization: "Bearer " + token } }),
+      axios.get(import.meta.env.VITE_BACKEND_URL+"/api/orders", { headers: { Authorization: "Bearer " + token } }),
+      axios.get(import.meta.env.VITE_BACKEND_URL+"/api/suppliers", { headers: { Authorization: "Bearer " + token } }),
     ])
       .then(([oRes, sRes]) => {
         setOrders(Array.isArray(oRes.data) ? oRes.data : []);

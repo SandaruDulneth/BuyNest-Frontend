@@ -33,7 +33,7 @@ export default function EditFaqPage() {
 
         try {
             setSubmitting(true);
-            await axios.put(`http://localhost:5000/api/faqs/${faqId}`, body, {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/faqs/${faqId}`, body, {
                 headers: { Authorization: "Bearer " + token },
             });
             toast.success("FAQ updated successfully");

@@ -45,7 +45,7 @@ export default function UserPage() {
         }
 
         axios
-            .get("http://localhost:5000/api/users", {
+            .get(import.meta.env.VITE_BACKEND_URL+"/api/users", {
                 headers: { Authorization: "Bearer " + token },
             })
             .then((res) => {

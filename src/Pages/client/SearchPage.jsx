@@ -13,7 +13,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (query) {
-      fetch(`http://localhost:5000/api/products/search?query=${query}`)
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/products/search?query=${query}`)
         .then((res) => res.json())
         .then((data) => {
           setResults(Array.isArray(data) ? data : []);

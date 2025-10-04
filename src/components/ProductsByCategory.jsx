@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard"; // keep for default
 
 export default function ProductsByCategory({
   category,
-  apiBase = "http://localhost:5000",
+  apiBase = import.meta.env.VITE_BACKEND_URL,
   CardComponent = ProductCard, // 👈 default to old ProductCard
 }) {
   const [products, setProducts] = useState([]);

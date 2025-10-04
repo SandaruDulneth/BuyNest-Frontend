@@ -36,7 +36,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (isLoading) {
       axios
-        .get("http://localhost:5000/api/products")
+        .get(import.meta.env.VITE_BACKEND_URL+"/api/products")
         .then((res) => {
           // add notified flag when fetching
           const updated = res.data.map((p) => ({ ...p, notified: false }));
@@ -59,7 +59,7 @@ export default function ProductPage() {
       return;
     }
     axios
-      .delete("http://localhost:5000/api/products/" + productId, {
+      .delete(import.meta.env.VITE_BACKEND_URL+"/api/products/" + productId, {
         headers: { Authorization: "Bearer " + token },
       })
       .then(() => {
@@ -75,7 +75,7 @@ export default function ProductPage() {
   function notifySupplier(productId) {
     setSending(true);
     axios
-      .post("http://localhost:5000/api/suppliers/notify", { productId })
+      .post(import.meta.env.VITE_BACKEND_URL+"/api/suppliers/notify", { productId })
       .then(() => {
         setSending(false);
         setShowConfirm(false);

@@ -54,7 +54,7 @@ export default function AdminReviewPage() {
       return;
     }
     axios
-      .get("http://localhost:5000/api/reviews", {
+      .get(import.meta.env.VITE_BACKEND_URL+"/api/reviews", {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {

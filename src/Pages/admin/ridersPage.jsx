@@ -48,7 +48,7 @@ export default function AdminRiderPage() {
             return;
         }
         axios
-            .get("http://localhost:5000/api/riders", {
+            .get(import.meta.env.VITE_BACKEND_URL+"/api/riders", {
                 headers: { Authorization: "Bearer " + token },
             })
             .then((res) => setRiders(Array.isArray(res.data) ? res.data : []))

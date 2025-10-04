@@ -33,7 +33,7 @@ export default function AdminFaqPage() {
             return;
         }
         axios
-            .get("http://localhost:5000/api/faqs", {
+            .get(import.meta.env.VITE_BACKEND_URL+"/api/faqs", {
                 headers: { Authorization: "Bearer " + token },
             })
             .then((res) => {
@@ -57,7 +57,7 @@ export default function AdminFaqPage() {
             return;
         }
         axios
-            .delete(`http://localhost:5000/api/faqs/${faqId}`, {
+            .delete(`${import.meta.env.VITE_BACKEND_URL}/api/faqs/${faqId}`, {
                 headers: { Authorization: "Bearer " + token },
             })
             .then(() => {
