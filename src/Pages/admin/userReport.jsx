@@ -44,11 +44,18 @@ const UserReportsPage = () => {
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
 
-        // Add Logo (Adjust position)
-        const logoPath = "/public/logo1.png";
-        const logo = await fetch(logoPath).then((res) => res.blob());
-        const logoDataUrl = URL.createObjectURL(logo);
-        doc.addImage(logoDataUrl, "png", 15, 10, 40, 20); // Add logo at the top-left corner
+ try {
+            const logo = new Image();
+            logo.src = "/logo1.png"; //  public path (no /public prefix)
+            await new Promise((resolve, reject) => {
+                logo.onload = resolve;
+                logo.onerror = reject;
+            });
+            doc.addImage(logo, "PNG", 15, 10, 40, 20);
+        } catch (err) {
+            console.warn("⚠ Logo failed to load, skipping image:", err);
+        }
+
 
         // Add Report Title
         doc.setFontSize(16);
