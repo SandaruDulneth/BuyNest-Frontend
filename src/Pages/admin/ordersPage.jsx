@@ -163,6 +163,15 @@ export default function AdminOrdersPage() {
                 <KpiCard title="Completed Orders" value={orders.filter(o => String(o.status).toLowerCase() === "completed").length} icon={<span className="text-xl">✔️</span>} />
             </div>
 
+            <div className="mb-4 flex justify-end rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+                <button
+                    onClick={() => navigate("/admin/odrp")}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-dgreen px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                >
+                    Create Report
+                </button>
+            </div>
+
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                 {/* Modal */}
                 <Modal
