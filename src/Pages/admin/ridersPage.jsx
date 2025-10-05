@@ -45,55 +45,80 @@ export default function AdminRiderPage() {
 
     // Load Google Maps script
     useEffect(() => {
-        const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
-        const url = `https://maps.googleapis.com/maps/api/js?key=${key}`;
-        if (document.getElementById("gmaps-sdk")) return;
-        const s = document.createElement("script");
-        s.src = url;
-        s.async = true;
-        s.defer = true;
-        s.id = "gmaps-sdk";
+        let mapInitialized = false;
 
-        s.onload = () => initMap();
-        document.body.appendChild(s);
+        const tryInitMap = async () => {
+            const el = document.getElementById("delivery-map");
+            if (!el) {
+                // Wait until element exists (especially on mobile)
+                console.warn("Map container not ready yet.");
+                requestAnimationFrame(tryInitMap);
+                return;
+            }
+
+            if (mapInitialized) return;
+            mapInitialized = true;
+
+            try {
+                // Load the Maps JS API dynamically (only once)
+                if (!window.google || !window.google.maps) {
+                    (g => {
+                        var h, a, k,
+                            p = "The Google Maps JavaScript API",
+                            c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+                        b = b[c] || (b[c] = {});
+                        var d = b.maps || (b.maps = {}),
+                            r = new Set(),
+                            e = new URLSearchParams,
+                            u = () => h ||
+                                (h = new Promise(async (f, n) => {
+                                    await (a = m.createElement("script"));
+                                    e.set("key", import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+                                    e.set("v", "weekly");
+                                    e.set("callback", c + ".maps." + q);
+                                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                                    d[q] = f;
+                                    a.onerror = () => (h = n(Error(p + " could not load.")));
+                                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                                    m.head.append(a);
+                                }));
+                        d[l]
+                            ? console.warn(p + " only loads once. Ignoring:", g)
+                            : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+                    })({});
+                }
+
+                const { Map } = await google.maps.importLibrary("maps");
+                const m = new Map(el, {
+                    center: { lat: 6.9271, lng: 79.8612 },
+                    zoom: 11,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                });
+                setMap(m);
+                console.log("✅ Google Map initialized successfully");
+            } catch (err) {
+                console.error("❌ Failed to init map:", err);
+            }
+        };
+
+        // Wait for next paint to ensure DOM ready
+        requestAnimationFrame(tryInitMap);
     }, []);
 
-    function initMap() {
-        const el = document.getElementById("delivery-map");
-        if (!el || !window.google) return;
-        const m = new window.google.maps.Map(el, {
-            center: { lat: 6.9271, lng: 79.8612 }, // Colombo default
-            zoom: 11,
-            mapTypeControl: false,
-            streetViewControl: false,
-        });
-        setMap(m);
-    }
 
-    // Initial load of latest locations
-    useEffect(() => {
-        if (!map) return;
-        (async () => {
-            try {
-                const res = await axios.get(import.meta.env.VITE_BACKEND_URL+"/api/tracking/locations", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                (res.data || []).forEach((loc) => {
-                    upsertMarker(loc);
-                });
-            } catch (e) {
-                // silent fail in UI
-            }
-        })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [map]);
 
     // Socket for live updates
+    const socketURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    let socket; // singleton
+
     useEffect(() => {
-        const socket = io(import.meta.env.VITE_BACKEND_URL, {
-            transports: ["websocket", "polling"],  // fallback
-            withCredentials: true,
-        });
+        if (!socket) {
+            socket = io(socketURL, {
+                transports: ["websocket"], // websocket only
+                withCredentials: true,
+            });
+        }
 
         socket.on("connect", () => {
             console.log("✅ Connected to socket:", socket.id);
@@ -103,14 +128,16 @@ export default function AdminRiderPage() {
             upsertMarker(loc);
         });
 
-        socket.on("disconnect", () => {
-            console.log("❌ Socket disconnected");
+        socket.on("disconnect", (reason) => {
+            console.warn("⚠️ Socket disconnected:", reason);
         });
 
-
-
-
-        return () => socket.disconnect();
+        // cleanup listeners without disconnecting socket
+        return () => {
+            socket.off("connect");
+            socket.off("disconnect");
+            socket.off("riderLocation");
+        };
     }, [map]);
 
 
