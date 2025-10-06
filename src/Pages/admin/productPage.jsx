@@ -24,21 +24,18 @@ export default function ProductPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
 
-  // ✅ Modal states
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sending, setSending] = useState(false);
 
-  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 8;
 
   useEffect(() => {
     if (isLoading) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL+"/api/products")
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products")
         .then((res) => {
-          // add notified flag when fetching
           const updated = res.data.map((p) => ({ ...p, notified: false }));
           setProducts(updated);
           setAllProducts(updated);
@@ -59,7 +56,7 @@ export default function ProductPage() {
       return;
     }
     axios
-      .delete(import.meta.env.VITE_BACKEND_URL+"/api/products/" + productId, {
+      .delete(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId, {
         headers: { Authorization: "Bearer " + token },
       })
       .then(() => {
@@ -75,33 +72,23 @@ export default function ProductPage() {
   function notifySupplier(productId) {
     setSending(true);
     axios
-      .post(import.meta.env.VITE_BACKEND_URL+"/api/suppliers/notify", { productId })
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/suppliers/notify", {
+        productId,
+      })
       .then(() => {
         setSending(false);
         setShowConfirm(false);
-
-        // mark product as notified
         setAllProducts((prev) =>
           prev.map((p) =>
             p.productId === productId ? { ...p, notified: true } : p
           )
         );
-
         toast.success("Supplier notified!");
       })
       .catch((err) => {
         setSending(false);
         toast.error(err.response?.data?.message || "Failed to notify supplier");
       });
-  }
-
-  function handleCategoryChange(e) {
-    setSelectedCategory(e.target.value);
-    setCurrentPage(1);
-  }
-  function handleStockChange(e) {
-    setStockFilter(e.target.value);
-    setCurrentPage(1);
   }
 
   const categories = [
@@ -143,7 +130,6 @@ export default function ProductPage() {
   ).length;
   const outOfStockCount = allProducts.filter((p) => p.stock === 0).length;
 
-  // --- Notifications (id, name, image, message) ---
   const notifications = allProducts
     .filter((p) => p.stock === 0 || (p.stock > 0 && p.stock < 10))
     .map((p) => ({
@@ -175,11 +161,13 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="relative w-full h-full max-h-full overflow-y-auto p-6">
+    <div className="relative w-full h-full max-h-full overflow-y-auto p-4 md:p-6">
       {/* Header */}
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex justify-between items-center flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-dgreen">Product Inventory</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-dgreen">
+            Product Inventory
+          </h1>
           <p className="text-gray-500 text-sm">
             Manage your product details, categories, pricing, and stock
             information.
@@ -232,7 +220,9 @@ export default function ProductPage() {
                         </div>
                       )}
                       <div className="flex flex-col flex-1">
-                        <span className="text-xs text-slate-500">ID: {n.id}</span>
+                        <span className="text-xs text-slate-500">
+                          ID: {n.id}
+                        </span>
                         <span
                           className={`font-medium ${
                             n.type === "out"
@@ -244,7 +234,6 @@ export default function ProductPage() {
                         </span>
                       </div>
 
-                      {/* ✅ Tick if notified */}
                       {n.notified && (
                         <FiCheckCircle className="text-green-600 text-lg ml-auto" />
                       )}
@@ -264,7 +253,7 @@ export default function ProductPage() {
       {/* ✅ Confirmation Modal */}
       {showConfirm && selectedProduct && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-96">
+          <div className="bg-white rounded-xl shadow-lg p-6 w-80 sm:w-96">
             <h2 className="text-lg font-bold mb-3 text-slate-800">
               Confirm Supplier Notification
             </h2>
@@ -321,7 +310,7 @@ export default function ProductPage() {
         <div className="flex flex-wrap items-center gap-4">
           <select
             value={selectedCategory}
-            onChange={handleCategoryChange}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             className="border border-slate-300 rounded px-3 py-2"
           >
             {categories.map((cat, i) => (
@@ -333,7 +322,7 @@ export default function ProductPage() {
 
           <select
             value={stockFilter}
-            onChange={handleStockChange}
+            onChange={(e) => setStockFilter(e.target.value)}
             className="border border-slate-300 rounded px-3 py-2"
           >
             <option value="All">All Stock</option>
@@ -349,7 +338,7 @@ export default function ProductPage() {
               placeholder="Search by name or ID"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-grow outline-none px-2 py-1"
+              className="flex-grow outline-none px-2 py-1 text-sm"
             />
             {searchQuery && (
               <button
@@ -370,33 +359,33 @@ export default function ProductPage() {
         </Link>
       </div>
 
-      {/* Product Table */}
-      <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <table className="min-w-full text-sm md:text-base">
-          <thead className="bg-slate-50 text-slate-600">
+      {/* ✅ Responsive Table Wrapper */}
+      <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-x-auto">
+        <table className="min-w-[800px] w-full text-sm md:text-base">
+          <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
             <tr>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[110px]">
                 Product ID
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[160px]">
                 Name
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-center min-w-[80px]">
                 Image
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[180px]">
                 Categories
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[140px]">
                 Original Price
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[140px]">
                 Selling Price
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase text-left">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-left min-w-[120px]">
                 Stock
               </th>
-              <th className="py-3 px-4 text-xs font-semibold uppercase">
+              <th className="py-3 px-4 text-xs font-semibold uppercase text-center min-w-[120px]">
                 Actions
               </th>
             </tr>
@@ -443,7 +432,7 @@ export default function ProductPage() {
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-center">
                     <div className="flex justify-center space-x-2">
                       <button
                         onClick={() =>
@@ -465,45 +454,48 @@ export default function ProductPage() {
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="py-6 text-slate-500 text-center">
+                <td
+                  colSpan="8"
+                  className="py-6 text-slate-500 text-center whitespace-nowrap"
+                >
                   No products found
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center p-4 bg-slate-50">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => p - 1)}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === 1
-                  ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                  : "bg-dgreen text-white hover:bg-dgreen/90"
-              }`}
-            >
-              Previous
-            </button>
-            <p className="text-slate-600 text-sm">
-              Page {currentPage} of {totalPages}
-            </p>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => p + 1)}
-              className={`px-4 py-2 rounded-lg ${
-                currentPage === totalPages
-                  ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                  : "bg-dgreen text-white hover:bg-dgreen/90"
-              }`}
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-between items-center p-4 bg-slate-50 flex-wrap gap-2 mt-4 rounded-xl">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                : "bg-dgreen text-white hover:bg-dgreen/90"
+            }`}
+          >
+            Previous
+          </button>
+          <p className="text-slate-600 text-sm">
+            Page {currentPage} of {totalPages}
+          </p>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                : "bg-dgreen text-white hover:bg-dgreen/90"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {/* Report Button */}
       <div className="mt-6 flex justify-end">
