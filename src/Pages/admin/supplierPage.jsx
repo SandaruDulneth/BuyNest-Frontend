@@ -121,7 +121,7 @@ export default function AdminSupplierPage() {
     );
 
     // ---------- Supplier Scorecard ----------
-    const scorecard = useMemo(() => {
+        const scorecard = useMemo(() => {
         const supplierGroups = {};
         suppliers.forEach((s) => {
             const key = s.Name || "Unknown";
@@ -130,39 +130,51 @@ export default function AdminSupplierPage() {
         });
 
         return Object.entries(supplierGroups).map(([name, records]) => {
-            // --- Total Purchase = sum of cost
+            // Group by productId within supplier
+            const productGroups = {};
+            records.forEach((r) => {
+                const productKey = r.productId || "Unknown";
+                if (!productGroups[productKey]) productGroups[productKey] = [];
+                productGroups[productKey].push(r);
+            });
+
+            // --- Calculate price consistency per product ---
+            const productConsistencies = Object.values(productGroups).map((prods) => {
+                const unitPrices = prods
+                    .map((r) => {
+                        const stock = Number(r.stock) || 0;
+                        const cost = Number(r.cost) || 0;
+                        return stock > 0 ? cost / stock : 0;
+                    })
+                    .filter((p) => p > 0);
+
+                if (unitPrices.length === 0) return 100; // no data = assume consistent
+
+                const avg =
+                    unitPrices.reduce((a, b) => a + b, 0) / unitPrices.length;
+                const max = Math.max(...unitPrices);
+                const min = Math.min(...unitPrices);
+                const priceChange = avg > 0 ? ((max - min) / avg) * 100 : 0;
+                return Math.max(0, 100 - priceChange);
+            });
+
+            // Average consistency across all products of this supplier
+            const priceConsistency =
+                productConsistencies.reduce((a, b) => a + b, 0) /
+                (productConsistencies.length || 1);
+
+            // --- Other metrics ---
             const totalPurchase = records.reduce(
                 (sum, r) => sum + (Number(r.cost) || 0),
                 0
             );
-
-            // --- Order Frequency
             const frequency = records.length;
 
-            // --- Price Consistency (unit price = cost / stock)
-            const unitPrices = records
-                .map((r) => {
-                    const stock = Number(r.stock) || 0;
-                    const cost = Number(r.cost) || 0;
-                    return stock > 0 ? cost / stock : 0;
-                })
-                .filter((p) => p > 0);
-
-            const avg =
-                unitPrices.reduce((a, b) => a + b, 0) / (unitPrices.length || 1);
-            const max = unitPrices.length ? Math.max(...unitPrices) : 0;
-            const min = unitPrices.length ? Math.min(...unitPrices) : 0;
-
-            const priceChange = avg > 0 ? ((max - min) / avg) * 100 : 0;
-            const priceConsistency = Math.max(0, 100 - priceChange);
-
-            // --- New Scoring Formula (Fairer)
             const purchaseScore = Math.min(100, totalPurchase / 100);
             const frequencyScore = Math.min(100, frequency * 20);
-            const consistencyScore = priceConsistency;
 
             const overallScore = Math.round(
-                purchaseScore * 0.2 + frequencyScore * 0.2 + consistencyScore * 0.6
+                purchaseScore * 0.2 + frequencyScore * 0.2 + priceConsistency * 0.6
             );
 
             return {
@@ -174,6 +186,7 @@ export default function AdminSupplierPage() {
             };
         });
     }, [suppliers]);
+
 
     // ---------- Generate PDF ----------
     const handleCreateReport = async () => {
@@ -355,7 +368,7 @@ export default function AdminSupplierPage() {
                     <thead className="bg-slate-50 text-slate-600">
                     <tr>
                         <th className="py-3 px-4 text-xs font-semibold uppercase">
-                            Supplier ID
+                            Supplie ID
                         </th>
                         <th className="py-3 px-4 text-xs font-semibold uppercase">Name</th>
                         <th className="py-3 px-4 text-xs font-semibold uppercase">Email</th>
