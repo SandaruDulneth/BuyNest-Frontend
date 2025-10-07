@@ -107,7 +107,7 @@ export default function UserPage() {
             setUsers((prev) => applyOptimistic(prev));
 
             const res = await axios.put(
-                `http://localhost:5000/api/users/block/${id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/users/block/${id}`,
                 { isBlocked: nextValue }, // explicit desired state
                 { headers: { Authorization: "Bearer " + token } }
             );

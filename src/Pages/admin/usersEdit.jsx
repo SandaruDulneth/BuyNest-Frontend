@@ -85,7 +85,7 @@ export default function EditUserPage() {
             };
             if (password.trim()) body.password = password.trim();
 
-            await axios.put(`http://localhost:5000/api/users/${userId}`, body, {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`, body, {
                 headers: {
                     Authorization: "Bearer " + token,
                     "Content-Type": "application/json",
