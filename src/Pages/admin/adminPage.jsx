@@ -39,6 +39,7 @@ import UserReport from "./userReport.jsx";
 import OrderReport from "./orderReports.jsx";
 
 import ProductAnalysis from "./ProductAnalysis.jsx";
+import {BsShopWindow} from "react-icons/bs";
 
 
 export default function AdminPage() {
@@ -267,6 +268,7 @@ export default function AdminPage() {
       <>
         <SectionTitle>Dashboard</SectionTitle>
         <Item to="/admin/dashboard" icon={<FiHome />} label="Overview" end />
+          <Item to="/" icon={<BsShopWindow  />} label="Site Home" end />
 
         <SectionTitle>Analytics</SectionTitle>
         <Item to="/admin/product-analysis" icon={<FiPieChart />} label="Financial Summary" />

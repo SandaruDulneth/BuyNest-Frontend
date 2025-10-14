@@ -50,7 +50,8 @@ export default function ProfilePage() {
 
                 // Calculate total spent and completed orders
                 const total = data?.reduce((acc, order) => acc + order.total, 0) || 0;
-                const completed = data?.filter(order => order.status === "completed").length || 0;
+                const completed = data?.filter(order => order.status === "completed" || order.status === "delivered").length || 0;
+
 
                 setTotalSpent(total);
                 setCompletedOrders(completed);
@@ -108,7 +109,7 @@ export default function ProfilePage() {
 
         try {
             const response = await axios.put(
-                import.meta.env.VITE_BACKEND_URL+"/api/users/profile/${me.userId}",
+                `${import.meta.env.VITE_BACKEND_URL}/api/users/profile/${me.userId}`, // Corrected URL
                 editForm,
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -340,13 +341,13 @@ export default function ProfilePage() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <div className="flex justify-between">
-                                    <h4 className="text-lg font-semibold text-gray-800">Order ID: {order.orderId}</h4>
+                                    <h4 className="text-md font-semibold text-gray-800">Order ID: {order.orderId}</h4>
                                     <span className={statusBadge(order.status)}>
                                         {order.status?.[0]?.toUpperCase() + order.status?.slice(1)}
                                     </span>
                                 </div>
                                 <div>
-                                    <h5 className="font-medium text-gray-600">Products</h5>
+                                    <h5 className="font-medium text-gray-900">Products</h5>
                                     {order.products?.map((p, i) => (
                                         <div key={i} className="text-gray-700">
                                             {p.productInfo?.name} x {p.quantity}
@@ -354,8 +355,8 @@ export default function ProfilePage() {
                                     ))}
                                 </div>
                                 <div>
-                                    <h5 className="font-medium text-gray-600">Total</h5>
-                                    <p className="font-semibold text-gray-700">
+                                    <h5 className="font-medium text-gray-900">Total</h5>
+                                    <p className="font-semibold text-accent">
                                         {order.total?.toLocaleString("en-LK", {
                                             style: "currency",
                                             currency: "LKR",
@@ -363,7 +364,7 @@ export default function ProfilePage() {
                                     </p>
                                 </div>
                                 <div>
-                                    <h5 className="font-medium text-gray-600">Date</h5>
+                                    <h5 className="font-medium text-gray-900">Date</h5>
                                     <p className="text-gray-700">
                                         {new Date(order.date || order.createdAt).toLocaleDateString("en-GB")}
                                     </p>

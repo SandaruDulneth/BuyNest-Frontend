@@ -229,52 +229,34 @@ export default function AdminOrdersPage() {
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <p>
-                                        <span className="font-semibold">Name:</span>{" "}
-                                        {activeOrder.name}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Email:</span>{" "}
-                                        {activeOrder.email}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Phone:</span>{" "}
-                                        {activeOrder.phone}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Delivery method:</span>{" "}
-                                        {activeOrder.deliveryMethod}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Address:</span>{" "}
-                                        {activeOrder.address}
-                                    </p>
+                                    <p><span className="font-semibold">Name:</span> {activeOrder.name}</p>
+                                    <p><span className="font-semibold">Email:</span> {activeOrder.email}</p>
+                                    <p><span className="font-semibold">Phone:</span> {activeOrder.phone}</p>
+                                    <p><span className="font-semibold">Delivery method:</span> {activeOrder.deliveryMethod}</p>
+                                    <p><span className="font-semibold">Address:</span> {activeOrder.address}</p>
 
                                     {/* QR Code */}
-                                    {String(activeOrder.deliveryMethod).toLowerCase() ===
-                                        "pickup" && (
-                                            <div className="mt-4">
-                                                <span className="font-semibold">Order QR Code:</span>
-                                                <div className="mt-2">
-                                                    <QRCodeCanvas
-                                                        value={`${import.meta.env.VITE_BACKEND_URL}/api/orders/verify/${activeOrder.orderId}`}
-                                                        size={160}
-                                                        bgColor="#ffffff"
-                                                        fgColor="#000000"
-                                                        level="H"
-                                                        includeMargin={true}
-                                                    />
-                                                </div>
+                                    {String(activeOrder.deliveryMethod).toLowerCase() === "pickup" && (
+                                        <div className="mt-4">
+                                            <span className="font-semibold">Order QR Code:</span>
+                                            <div className="mt-2">
+                                                <QRCodeCanvas
+                                                    value={`${import.meta.env.VITE_BACKEND_URL}/api/orders/verify/${activeOrder.orderId}`}
+                                                    size={160}
+                                                    bgColor="#ffffff"
+                                                    fgColor="#000000"
+                                                    level="H"
+                                                    includeMargin={true}
+                                                />
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="space-y-2">
                                     <p className="flex items-center gap-2">
                                         <span className="font-semibold rounded-full">Status:</span>
-                                        <span className="font-bold">
-                      {String(activeOrder.status).toUpperCase()}
-                    </span>
+                                        <span className="font-bold">{String(activeOrder.status).toUpperCase()}</span>
                                     </p>
 
                                     {/* Manual Status Dropdown */}
@@ -282,9 +264,7 @@ export default function AdminOrdersPage() {
                                         <label className="font-semibold">Change status:</label>
                                         <select
                                             value={activeOrder.status}
-                                            onChange={(e) =>
-                                                handleStatusChange(activeOrder.orderId, e.target.value)
-                                            }
+                                            onChange={(e) => handleStatusChange(activeOrder.orderId, e.target.value)}
                                             className="ml-2 border rounded px-2 py-1 text-sm"
                                         >
                                             <option value="pending">Pending</option>
@@ -296,70 +276,54 @@ export default function AdminOrdersPage() {
                                         </select>
                                     </div>
 
-                                    <p>
-                                        <span className="font-semibold">Date:</span>{" "}
-                                        {new Date(activeOrder.date).toLocaleDateString("en-GB")}
-                                    </p>
-                                    <p>
-                                        <span className="font-semibold">Total:</span>{" "}
-                                        {activeOrder.total.toLocaleString("en-LK", {
-                                            style: "currency",
-                                            currency: "LKR",
-                                        })}
-                                    </p>
+                                    <p><span className="font-semibold">Date:</span> {new Date(activeOrder.date).toLocaleDateString("en-GB")}</p>
+                                    <p><span className="font-semibold">Total:</span> {activeOrder.total.toLocaleString("en-LK", { style: "currency", currency: "LKR" })}</p>
                                 </div>
                             </div>
 
                             {/* Products Table */}
                             <h3 className="text-xl font-semibold mt-4">Products</h3>
-                            <table className="w-full text-center border border-gray-200 shadow rounded">
-                                <thead className="bg-[var(--color-accent)] text-white">
-                                <tr>
-                                    <th className="py-2 px-2">Image</th>
-                                    <th className="py-2 px-2">Product</th>
-                                    <th className="py-2 px-2">Price</th>
-                                    <th className="py-2 px-2">Quantity</th>
-                                    <th className="py-2 px-2">Subtotal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {activeOrder.products.map((item, idx) => (
-                                    <tr
-                                        key={idx}
-                                        className={`${
-                                            idx % 2 === 0
-                                                ? "bg-[var(--color-primary)]"
-                                                : "bg-gray-100"
-                                        }`}
-                                    >
-                                        <td className="py-2 px-2">
-                                            <img
-                                                src={item.productInfo.images[0]}
-                                                alt={item.productInfo.name}
-                                                className="w-12 h-12 object-cover rounded"
-                                            />
-                                        </td>
-                                        <td className="py-2 px-2">{item.productInfo.name}</td>
-                                        <td className="py-2 px-2">
-                                            {item.productInfo.price.toLocaleString("en-LK", {
-                                                style: "currency",
-                                                currency: "LKR",
-                                            })}
-                                        </td>
-                                        <td className="py-2 px-2">{item.quantity}</td>
-                                        <td className="py-2 px-2">
-                                            {(
-                                                item.productInfo.price * item.quantity
-                                            ).toLocaleString("en-LK", {
-                                                style: "currency",
-                                                currency: "LKR",
-                                            })}
-                                        </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
 
+                            {/* Scrollable Table for Products */}
+                            <div className="overflow-y-auto max-h-64"> {/* Limit the visible height and make it scrollable */}
+                                <table className="w-full text-center border border-gray-200 shadow rounded">
+                                    <thead className="bg-[var(--color-accent)] text-white">
+                                    <tr>
+                                        <th className="py-2 px-2">Image</th>
+                                        <th className="py-2 px-2">Product</th>
+                                        <th className="py-2 px-2">Price</th>
+                                        <th className="py-2 px-2">Quantity</th>
+                                        <th className="py-2 px-2">Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {activeOrder.products.map((item, idx) => (
+                                        <tr
+                                            key={idx}
+                                            className={`${idx % 2 === 0 ? "bg-[var(--color-primary)]" : "bg-gray-100"}`}
+                                        >
+                                            <td className="py-2 px-2">
+                                                <img
+                                                    src={item.productInfo.images[0]}
+                                                    alt={item.productInfo.name}
+                                                    className="w-12 h-12 object-cover rounded"
+                                                />
+                                            </td>
+                                            <td className="py-2 px-2">{item.productInfo.name}</td>
+                                            <td className="py-2 px-2">
+                                                {item.productInfo.price.toLocaleString("en-LK", { style: "currency", currency: "LKR" })}
+                                            </td>
+                                            <td className="py-2 px-2">{item.quantity}</td>
+                                            <td className="py-2 px-2">
+                                                {(item.productInfo.price * item.quantity).toLocaleString("en-LK", { style: "currency", currency: "LKR" })}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Modal Actions */}
                             <div className="flex justify-end gap-2">
                                 <button
                                     onClick={() => setIsModalOpen(false)}
@@ -377,6 +341,7 @@ export default function AdminOrdersPage() {
                         </div>
                     )}
                 </Modal>
+
 
                 {/* Orders Table */}
                 <div className="overflow-x-auto">

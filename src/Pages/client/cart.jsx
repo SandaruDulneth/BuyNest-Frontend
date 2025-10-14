@@ -1,8 +1,8 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
-import {addToCart, addToCartQty, getCart, removeCart} from "../../utils/cart";
+import { addToCart, addToCartQty, getCart, removeCart } from "../../utils/cart";
+import { motion } from "framer-motion"; // Import Framer Motion
 
 export default function CartPage() {
     const [cart, setCart] = useState(getCart());
@@ -91,7 +91,12 @@ export default function CartPage() {
             {cart.length > 0 && (
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                     {/* Left: Items */}
-                    <section className="lg:col-span-8">
+                    <motion.section
+                        className="lg:col-span-8"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
                         <div className="hidden sm:grid grid-cols-12 rounded-t-xl bg-yellow-400/90 px-4 py-3 text-sm font-medium">
                             <div className="col-span-6">Product</div>
                             <div className="col-span-2 text-center">Price</div>
@@ -100,14 +105,17 @@ export default function CartPage() {
                         </div>
 
                         <ul className="divide-y rounded-b-xl border">
-                            {cart.map((item) => {
+                            {cart.map((item, index) => {
                                 const qty = getQty(item);
                                 const line = (Number(item.price || 0) * qty).toFixed(2);
 
                                 return (
-                                    <li
+                                    <motion.li
                                         key={item.productId}
                                         className="grid grid-cols-12 items-center gap-4 px-4 py-4"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.4, delay: index * 0.05 }}
                                     >
                                         <div className="col-span-12 sm:col-span-6 flex items-center gap-3">
                                             <button
@@ -126,12 +134,8 @@ export default function CartPage() {
                                             />
 
                                             <div className="min-w-0">
-                                                <p className="truncate font-medium text-gray-900">
-                                                    {item.name}
-                                                </p>
-                                                <p className="text-xs text-gray-500">
-                                                    ID: {item.productId}
-                                                </p>
+                                                <p className="truncate font-medium text-gray-900 ">{item.name}</p>
+                                                <p className="text-xs text-gray-500">ID: {item.productId}</p>
                                                 <div className="mt-1 sm:hidden text-sm">
                                                     {Number(item.labelledPrice) > Number(item.price) ? (
                                                         <>
@@ -152,13 +156,13 @@ export default function CartPage() {
                                         </div>
 
                                         {/* Price (desktop) */}
-                                        <div className="col-span-6 hidden sm:block sm:col-span-2 text-center text-sm">
+                                        <div className="col-span-6 hidden sm:block sm:col-span-2 text-center text-sm ">
                                             {Number(item.labelledPrice) > Number(item.price) ? (
                                                 <>
-                          <span className="mr-2 text-gray-400 line-through">
+                          <span className="text-gray-400 line-through block">
                             {Number(item.labelledPrice).toFixed(2)}
                           </span>
-                                                    <span className="font-semibold">
+                                                    <span className="font-semibold block">
                             {Number(item.price).toFixed(2)}
                           </span>
                                                 </>
@@ -179,9 +183,7 @@ export default function CartPage() {
                                                 >
                                                     <BiMinus />
                                                 </button>
-                                                <span className="w-10 text-center select-none">
-                          {item.quantity}
-                        </span>
+                                                <span className="w-10 text-center select-none">{item.quantity}</span>
                                                 <button
                                                     onClick={() => updateQty(item, 1)}
                                                     className="grid h-9 w-9 place-items-center"
@@ -196,7 +198,7 @@ export default function CartPage() {
                                         <div className="col-span-6 sm:col-span-2 text-left sm:text-right font-semibold">
                                             {line}
                                         </div>
-                                    </li>
+                                    </motion.li>
                                 );
                             })}
                         </ul>
@@ -215,10 +217,15 @@ export default function CartPage() {
                             <Feature title="Flexible Payment" desc="Multiple secure payment options" />
                             <Feature title="24×7 Support" desc="We support online all day." />
                         </div>
-                    </section>
+                    </motion.section>
 
                     {/* Right: Order Summary */}
-                    <aside className="lg:col-span-4">
+                    <motion.aside
+                        className="lg:col-span-4"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
                         <div className="rounded-xl border bg-white p-4 shadow-sm sticky top-20">
                             <h2 className="mb-3 text-lg font-semibold">Order Summary</h2>
                             <div className="divide-y text-sm">
@@ -234,11 +241,7 @@ export default function CartPage() {
                                 {/* ✅ Shipping row logic */}
                                 <SummaryRow
                                     label="Shipping"
-                                    value={
-                                        total > 20000
-                                            ? "Free"
-                                            : "Pending"
-                                    }
+                                    value={total > 20000 ? "Free" : "Pending"}
                                 />
                             </div>
 
@@ -262,7 +265,7 @@ export default function CartPage() {
                                 &larr; Continue Shopping
                             </Link>
                         </div>
-                    </aside>
+                    </motion.aside>
                 </div>
             )}
         </main>
