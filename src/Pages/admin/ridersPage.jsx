@@ -183,14 +183,21 @@ export default function AdminRiderPage() {
             return;
         }
         axios
-            .get(import.meta.env.VITE_BACKEND_URL+"/api/riders", {
+            .get(import.meta.env.VITE_BACKEND_URL + "/api/riders", {
                 headers: { Authorization: "Bearer " + token },
             })
-            .then((res) => setRiders(Array.isArray(res.data) ? res.data : []))
+            .then((res) => {
+                // ✅ Sort riders by riderId in descending order
+                const sorted = Array.isArray(res.data)
+                    ? [...res.data].sort((a, b) => b.riderId.localeCompare(a.riderId))
+                    : [];
+                setRiders(sorted);
+            })
             .catch((e) =>
                 toast.error(e.response?.data?.message || "Failed to load riders")
             )
             .finally(() => setIsLoading(false));
+
     }, [isLoading]);
 
     function deleteRider(riderId) {

@@ -33,15 +33,20 @@ export default function ProductPage() {
 
   useEffect(() => {
     if (isLoading) {
-      axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/api/products")
-        .then((res) => {
-          const updated = res.data.map((p) => ({ ...p, notified: false }));
-          setProducts(updated);
-          setAllProducts(updated);
-          setIsLoading(false);
-        })
-        .catch(() => {
+        axios
+            .get(import.meta.env.VITE_BACKEND_URL + "/api/products")
+            .then((res) => {
+                // Sort by productId in descending order
+                const updated = res.data
+                    .map((p) => ({ ...p, notified: false }))
+                    .sort((a, b) => b.productId.localeCompare(a.productId));
+
+                setProducts(updated);
+                setAllProducts(updated);
+                setIsLoading(false);
+            })
+
+            .catch(() => {
           toast.error("Failed to load products");
           setIsLoading(false);
         });
