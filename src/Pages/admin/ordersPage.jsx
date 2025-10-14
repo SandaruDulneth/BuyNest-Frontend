@@ -150,7 +150,7 @@ export default function AdminOrdersPage() {
     const paymentBadge = (paymentStatus) => {
         const p = String(paymentStatus || "paid").toLowerCase();
         if (p === "paid") return <Pill tone="green">Paid</Pill>;
-        if (p === "unpaid") return <Pill tone="amber">COD</Pill>;
+        if (p === "unpaid") return <Pill tone="slate">COD</Pill>;
         return <Pill tone="slate">{paymentStatus || "—"}</Pill>;
     };
 

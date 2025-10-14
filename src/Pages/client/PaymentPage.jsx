@@ -162,11 +162,11 @@ function PaymentForm() {
                             <div>
                                 <p className="font-medium text-gray-800">{item.name}</p>
                                 <p className="text-xs text-gray-500">
-                                    Qty {item.quantity ?? item.qty} × ${item.price}
+                                    Qty {item.quantity ?? item.qty} × LKR {item.price}
                                 </p>
                             </div>
                             <span className="font-semibold text-gray-700">
-                ${(item.price * (item.quantity ?? item.qty)).toFixed(2)}
+                LKR {(item.price * (item.quantity ?? item.qty)).toFixed(2)}
               </span>
                         </li>
                     ))}
@@ -174,7 +174,7 @@ function PaymentForm() {
 
                 <div className="flex justify-between pt-4 border-t font-semibold text-lg">
                     <span>Total</span>
-                    <span>${amount.toFixed(2)}</span>
+                    <span>LKR {amount.toFixed(2)}</span>
                 </div>
             </div>
 
