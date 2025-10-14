@@ -283,7 +283,7 @@ export default function ProductAnalysis() {
       const pageH = pdf.internal.pageSize.getHeight();
 
       pdf.setFontSize(16);
-      pdf.text("Financial Summary", pageW / 2, 14, { align: "center" });
+      pdf.text("BuyNest Financial Summary", pageW / 2, 14, { align: "center" });
       pdf.setFontSize(10);
       pdf.text(`Date range: ${fromStr} - ${toStr}`, pageW / 2, 20, { align: "center" });
       pdf.text(`Generated: ${new Date().toLocaleString()}`, pageW / 2, 25, { align: "center" });
@@ -342,7 +342,7 @@ export default function ProductAnalysis() {
       {/* header */}
       <div className="mb-5 flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-emerald-800">Financial Summary</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-800">BuyNest Financial Summary</h1>
           <p className="text-sm text-slate-500">Revenue & Profit and Top Selling Products.</p>
         </div>
         <button

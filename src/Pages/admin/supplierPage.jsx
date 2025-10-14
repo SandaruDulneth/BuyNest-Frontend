@@ -7,9 +7,9 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiCalendar } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Chart } from "chart.js/auto";
 
 function LoadingScreen() {
     return (
@@ -189,51 +189,141 @@ export default function AdminSupplierPage() {
 
 
     // ---------- Generate PDF ----------
-    const handleCreateReport = async () => {
-        if (!fromDate || !toDate) {
-            toast.error("Please select a date range first");
-            return;
-        }
+      const handleCreateReport = async () => {
+    if (!fromDate || !toDate) {
+        toast.error("Please select a date range first");
+        return;
+    }
 
+    try {
         const doc = new jsPDF("p", "mm", "a4");
         const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
 
-        const logo = new Image();
-        logo.src = "/logo1.png";
-        await new Promise((res) => (logo.onload = res));
-        doc.addImage(logo, "PNG", 15, 10, 25, 15);
-
-        doc.setFontSize(14);
-        doc.text("BuyNest Supplier Report", pageWidth / 2, 30, { align: "center" });
-        doc.setFontSize(10);
-        doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth - 15, 20, {
-            align: "right",
+        // --- Header ---
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.text("BuyNest Inventory & Supply Cost Analysis", pageWidth / 2, 25, {
+        align: "center",
         });
+
+        doc.setFontSize(9);
+        doc.setTextColor(16, 185, 129);
+        doc.text(
+        `Report Period: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`,
+        pageWidth / 2,
+        31,
+        { align: "center" }
+        );
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(8);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth - 15, 15, {
+        align: "right",
+        });
+
+        // --- Supplier Summary ---
+        const summary = {};
+        suppliers.forEach((s) => {
+        const name = s.Name || "Unknown";
+        if (!summary[name]) summary[name] = { stock: 0, cost: 0 };
+        summary[name].stock += Number(s.stock) || 0;
+        summary[name].cost += Number(s.cost) || 0;
+        });
+
+        const supplierData = Object.entries(summary).map(([name, data]) => ({
+        name,
+        stock: data.stock,
+        cost: data.cost,
+        }));
+
+        const totalCost = supplierData.reduce((a, b) => a + b.cost, 0);
+
+        // --- Chart (safe render with larger labels) ---
+        const chartCanvas = document.createElement("canvas");
+        chartCanvas.width = 450;
+        chartCanvas.height = 230;
+        document.body.appendChild(chartCanvas);
+        const ctx = chartCanvas.getContext("2d");
+
+        const chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: supplierData.map((s) => s.name),
+            datasets: [
+            {
+                label: "Total Cost (LKR)",
+                data: supplierData.map((s) => s.cost),
+                backgroundColor: "#10B981",
+            },
+            ],
+        },
+        options: {
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+            x: {
+                ticks: {
+                color: "#000",
+                font: { size: 18, weight: "bold" }, // ✅ larger X-axis labels
+                maxRotation: 45,
+                minRotation: 0,
+                },
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { font: { size: 10 } },
+            },
+            },
+        },
+        });
+
+        await new Promise((r) => setTimeout(r, 500));
+        try {
+        const chartImg = chartCanvas.toDataURL("image/png");
+        doc.addImage(chartImg, "PNG", 20, 40, 170, 70);
+        } catch (e) {
+        console.error("Chart export failed:", e);
+        doc.setTextColor(200, 0, 0);
+        doc.text("Chart rendering failed", 20, 60);
+        }
+
+        chartInstance.destroy();
+        document.body.removeChild(chartCanvas);
+
+        // --- Table ---
+        const tableData = supplierData.map((s) => [
+        s.name,
+        s.stock,
+        fmt.format(s.cost),
+        ((s.cost / totalCost) * 100).toFixed(1) + "%",
+        ]);
 
         autoTable(doc, {
-            startY: 55,
-            head: [
-                [
-                    "Supplier",
-                    "Total Purchase (LKR)",
-                    "Order Frequency",
-                    "Price Consistency %",
-                    "Overall Score",
-                ],
-            ],
-            body: scorecard.map((sc) => [
-                sc.name,
-                fmt.format(sc.totalPurchase),
-                sc.frequency,
-                `${sc.priceConsistency}%`,
-                `${sc.overallScore}%`,
-            ]),
-            styles: { fontSize: 10, halign: "center" },
-            headStyles: { fillColor: [16, 185, 129] },
+        startY: 120,
+        head: [["Supplier", "Total Stock", "Total Cost (LKR)", "% of Cost"]],
+        body: tableData,
+        styles: { fontSize: 9, halign: "center" },
+        headStyles: { fillColor: [16, 185, 129] },
         });
 
-        doc.save("Supplier_Scorecard.pdf");
+        // --- Footer (always at page bottom) ---
+        const footerY = pageHeight - 15; // ✅ fixed bottom margin
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.text("Report generated by: System Administrator", 20, footerY - 5);
+        doc.text("BuyNest Supplier Analysis System", 20, footerY);
+        doc.text("Page 1 / 1", pageWidth - 20, footerY, { align: "right" });
+
+        // --- Save PDF ---
+        doc.save("BuyNest_Supplier_Cost_Report.pdf");
+        toast.success("Report generated successfully!");
+    } catch (err) {
+        console.error("PDF Generation Error:", err);
+        toast.error("Failed to generate report. Check console for details.");
+    }
     };
+
 
     if (isLoading)
         return (
@@ -363,7 +453,7 @@ export default function AdminSupplierPage() {
             </div>
 
             {/* ---- Supplier Table ---- */}
-            <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="w-full rounded-2xl border border-slate-200 bg-white shadow-sm overflow-x-auto">
                 <table className="min-w-full text-sm md:text-base">
                     <thead className="bg-slate-50 text-slate-600">
                     <tr>

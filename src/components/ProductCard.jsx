@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-import {addToCart} from "../utils/cart.js";
-
+import { addToCart } from "../utils/cart.js";
 
 export default function ProductCard(props) {
   const p = props.product ?? props;
@@ -21,12 +19,10 @@ export default function ProductCard(props) {
     imageUrlProp ??
     (
       (Array.isArray(images) && images.length > 0
-        ? (typeof images[0] === "string"
-            ? images[0]
-            : images[0]?.url || images[0]?.publicUrl)
-
+        ? typeof images[0] === "string"
+          ? images[0]
+          : images[0]?.url || images[0]?.publicUrl
         : null) || "/images/placeholder.png"
-
     );
 
   const cleanPrice = Number(String(price).replace(/[^0-9.]/g, "")) || 0;
@@ -57,14 +53,13 @@ export default function ProductCard(props) {
   return (
     <div
       className={`
-        relative flex items-center font-poppins justify-between
-        rounded-2xl border border-gray-200 bg-white
-        shadow-sm hover:shadow-md transition-shadow
+        group relative flex items-center justify-between
+        rounded-2xl border border-gray-200 bg-white font-poppins
+        shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 ease-in-out
         p-4 sm:p-5 min-h-[190px] w-[340px]
         ${props.className || ""}
       `}
     >
-
       {/* ✅ Inline badges row */}
       {(discount || stockLabel) && (
         <div className="absolute top-2 left-4 right-4 flex justify-between items-center">
@@ -79,10 +74,9 @@ export default function ProductCard(props) {
 
       {/* Left side: Text + pricing */}
       <div className="flex-1 pr-4 mt-6">
-
         <Link
           to={`/product/${_id}`}
-          className="line-clamp-2 text-[15px] font-semibold text-gray-800 hover:text-emerald-600"
+          className="line-clamp-2 text-[15px] font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors"
         >
           {name}
         </Link>
@@ -91,7 +85,7 @@ export default function ProductCard(props) {
           <span className="text-emerald-600 text-lg font-bold">
             LKR {cleanPrice.toFixed(2)}
           </span>
-          {cleanLabelled > 0 && cleanLabelled > cleanPrice && (
+          {cleanLabelled > cleanPrice && (
             <span className="text-slate-400 line-through">
               LKR {cleanLabelled.toFixed(2)}
             </span>
@@ -102,13 +96,13 @@ export default function ProductCard(props) {
         <div className="mt-4">
           <button
             type="button"
-            onClick={()=>addToCart(p,1)}
+            onClick={() => addToCart(p, 1)}
             disabled={stock === 0}
-            className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border transition
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-all duration-300
               ${
                 stock === 0
                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "border-gray-200 hover:border-emerald-500 hover:text-emerald-600 text-gray-600"
+                  : "border-gray-200 text-gray-600 hover:border-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 transform hover:scale-110 shadow-sm hover:shadow-md"
               }`}
             aria-label="Add to cart"
           >
@@ -128,19 +122,20 @@ export default function ProductCard(props) {
         </div>
       </div>
 
-
       {/* Right side: Product image */}
-      <div className="flex-shrink-0 h-32 w-32 relative mt-6">
-
+      <div className="flex-shrink-0 h-32 w-32 relative mt-6 overflow-hidden rounded-xl">
         <Link to={`/product/${_id}`}>
           <img
             src={derivedImage}
             alt={name}
-            className="h-full w-full object-contain"
             loading="lazy"
+            className="h-full w-full object-contain transform transition-transform duration-300 ease-in-out group-hover:scale-110"
           />
         </Link>
       </div>
+
+      {/* Optional glow border effect */}
+      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-emerald-400/30 transition-all duration-300 pointer-events-none"></div>
     </div>
   );
 }

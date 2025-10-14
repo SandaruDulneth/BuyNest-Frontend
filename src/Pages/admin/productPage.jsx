@@ -175,7 +175,7 @@ export default function ProductPage() {
         </div>
 
         {/* 🔔 Notification Bell */}
-        <div className="relative">
+        <div className="relative z-50">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="relative p-3 rounded-full bg-white border border-slate-200 shadow hover:bg-slate-100"
