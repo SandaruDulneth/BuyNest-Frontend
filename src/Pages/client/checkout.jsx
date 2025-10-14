@@ -1,11 +1,20 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+
 export default function CheckoutPage() {
-    const { state } = useLocation();
-    const cart = state?.cart || [];
+    const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        if (location.state?.paymentSuccess) {
+            toast.success("Payment successful! You can now place your order.");
+        }
+    }, [location]);
+
+    const cart = location.state?.cart || [];
+
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -15,7 +24,9 @@ export default function CheckoutPage() {
     const [province, setProvince] = useState("");
     const [city, setCity] = useState("");
     const [zip, setZip] = useState("");
-    const navigate = useNavigate();
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [selectedPayment, setSelectedPayment] = useState("cod");
+
 
     // ✅ Constant delivery fee for home delivery
     const DELIVERY_FEE = 350;
@@ -61,14 +72,39 @@ export default function CheckoutPage() {
 
         try {
             const res = await axios.post(
-                import.meta.env.VITE_BACKEND_URL+"/api/orders",
+                import.meta.env.VITE_BACKEND_URL + "/api/orders",
                 orderInformation,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+
             toast.success("Order placed successfully");
             toast.success("QR generated successfully");
+
+// ✅ Step 1: Get the new orderId
+            const orderId = res.data.orderId;
+
+// ✅ Step 2: Update the payment column to "COD"
+            await axios.put(
+                `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}/payment/COD`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success("Payment status set to COD 💵");
+
+// ✅ Step 3: If home delivery, create delivery record
+            if (deliveryMethod === "home") {
+                await axios.post(
+                    import.meta.env.VITE_BACKEND_URL + "/api/delivery",
+                    { orderId, phone },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                toast.success("Delivery started to process 🚚");
+            }
+
+// ✅ Step 4: Clean up cart and navigate
             localStorage.removeItem("cart");
             setTimeout(() => navigate("/"), 2000);
+
 
             if (deliveryMethod === "home") {
                 const orderId = res.data.orderId;
@@ -78,7 +114,7 @@ export default function CheckoutPage() {
                     { orderId, phone },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                toast.success("Delivery started to process");
+
             }
         } catch (err) {
             console.error(err);
@@ -110,7 +146,11 @@ export default function CheckoutPage() {
                                     type="radio"
                                     value="pickup"
                                     checked={deliveryMethod === "pickup"}
-                                    onChange={() => setDeliveryMethod("pickup")}
+                                    onChange={() => {
+                                        setDeliveryMethod("pickup");
+                                        setSelectedPayment("card"); // ✅ force card only for pickup
+                                    }}
+
                                     className="h-4 w-4 text-emerald-600"
                                 />
                                 Store Pickup
@@ -300,47 +340,145 @@ export default function CheckoutPage() {
                             </dl>
                         </div>
 
+                        {/* Payment Method + Place Order */}
                         <div className="rounded-2xl border border-gray-200 p-6 shadow-sm">
-                            <h3 className="mb-4 text-sm font-semibold tracking-wider text-gray-700">
+                            <h3 className="mb-4 text-sm font-semibold tracking-wider text-gray-700 uppercase">
                                 PAYMENT METHOD
                             </h3>
+
                             <div className="space-y-4 text-sm">
+                                {/* Cash on Delivery — only available for Home Delivery */}
+                                {deliveryMethod === "home" && (
+                                    <label className="flex cursor-pointer items-start gap-3">
+                                        <input
+                                            type="radio"
+                                            name="payment"
+                                            value="cod"
+                                            checked={selectedPayment === "cod"}
+                                            onChange={() => setSelectedPayment("cod")}
+                                            className="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-600"
+                                        />
+                                        <div>
+                                            <div className="font-medium">Cash on Delivery</div>
+                                            <p className="mt-1 text-gray-600">
+                                                Pay with cash when your order is delivered.
+                                            </p>
+                                        </div>
+                                    </label>
+                                )}
+
+
+                                {/* Credit / Debit Card */}
                                 <label className="flex cursor-pointer items-start gap-3">
-                                    <input type="radio" name="payment" defaultChecked className="mt-1 h-4 w-4" />
+                                    <input
+                                        type="radio"
+                                        name="payment"
+                                        value="card"
+                                        checked={selectedPayment === "card"}
+                                        onChange={() => setSelectedPayment("card")}
+                                        className="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-600"
+                                    />
                                     <div>
-                                        <div className="font-medium">Cash on Delivery</div>
+                                        <div className="font-medium">Credit / Debit Card</div>
                                         <p className="mt-1 text-gray-600">
-                                            Pay with cash when your order is delivered. Please have the exact amount ready to give to the delivery agent, as change may be limited.
+                                            Secure online payment with Stripe using Visa, MasterCard, or Amex.
                                         </p>
                                     </div>
                                 </label>
 
-                                <label className="flex cursor-pointer items-start gap-3">
-                                    <input type="radio" name="payment" className="mt-1 h-4 w-4" />
-                                    <div><div className="font-medium">Credit / Debit Card</div></div>
-                                </label>
-
-                                <label className="flex cursor-pointer items-start gap-3">
-                                    <input type="radio" name="payment" className="mt-1 h-4 w-4" />
-                                    <div><div className="font-medium">PayPal</div></div>
+                                {/* PayPal (Coming soon) */}
+                                <label className="flex cursor-not-allowed items-start gap-3 opacity-50">
+                                    <input type="radio" name="payment" disabled className="mt-1 h-4 w-4" />
+                                    <div>
+                                        <div className="font-medium">PayPal</div>
+                                        <p className="mt-1 text-gray-600">(Coming soon)</p>
+                                    </div>
                                 </label>
                             </div>
 
-                            <label className="mt-6 flex items-start gap-3 text-sm">
-                                <input type="checkbox" className="mt-1 h-4 w-4 rounded border-gray-300" />
-                                <span>
-                                    I have read and accept the{" "}
-                                    <a href="#" className="font-medium underline">Terms &amp; Conditions</a>
-                                </span>
-                            </label>
+                            {/* ✅ Terms & Conditions */}
+                            <div className="mt-6 flex items-center gap-2 border-t pt-4">
+                                <input
+                                    type="checkbox"
+                                    id="terms"
+                                    className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 cursor-pointer"
+                                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                                />
+                                <label htmlFor="terms" className="text-sm text-gray-700">
+                                    I agree to the{" "}
+                                    <Link to="/terms" className="text-emerald-600 underline hover:text-emerald-700">
+                                        Terms & Conditions
+                                    </Link>
+                                    .
+                                </label>
+                            </div>
 
                             <button
-                                onClick={placeOrder}
-                                className="mt-6 w-full rounded-xl bg-black hover:bg-black/90 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-[.99] cursor-pointer"
+                                onClick={() => {
+                                    if (!selectedPayment) {
+                                        toast.error("Please select a payment method");
+                                        return;
+                                    }
+
+                                    // ✅ Prevent placing/redirecting without accepting terms
+                                    if (!acceptedTerms) {
+                                        toast.error("You must agree to the Terms & Conditions before proceeding");
+                                        return;
+                                    }
+
+                                    // ✅ Common validation (same as COD)
+                                    if (!firstName.trim()) return toast.error("First name is required");
+                                    if (!lastName.trim()) return toast.error("Last name is required");
+                                    if (!/^\d{10}$/.test(phone.trim()))
+                                        return toast.error("Phone number must be exactly 10 digits");
+
+                                    if (deliveryMethod === "home") {
+                                        if (!street.trim()) return toast.error("Street address is required");
+                                        if (!city.trim()) return toast.error("City is required");
+                                        if (!province.trim()) return toast.error("Province is required");
+                                    }
+
+                                    if (cart.length === 0) return toast.error("Your cart is empty");
+
+                                    // ✅ For Credit/Debit → redirect to payment if validation passes
+                                    if (selectedPayment === "card") {
+                                        navigate("/payment", {
+                                            state: {
+                                                amount: finalTotal,
+                                                cart,
+                                                deliveryDetails: {
+                                                    firstName,
+                                                    lastName,
+                                                    phone,
+                                                    deliveryMethod,
+                                                    street,
+                                                    province,
+                                                    city,
+                                                    zip,
+                                                },
+                                            },
+                                        });
+                                        return;
+                                    }
+
+                                    // ✅ For COD → normal backend order placement
+                                    if (selectedPayment === "cod") {
+                                        placeOrder();
+                                    }
+                                }}
+                                disabled={!acceptedTerms}
+                                className={`mt-6 w-full rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-sm transition active:scale-[.99] ${
+                                    acceptedTerms
+                                        ? "bg-black hover:bg-black/90 cursor-pointer"
+                                        : "bg-gray-400 cursor-not-allowed"
+                                }`}
                             >
-                                PLACE ORDER
+                                {selectedPayment === "cod" ? "PLACE ORDER" : "PROCEED TO PAYMENT"}
                             </button>
                         </div>
+
+
+
                     </aside>
                 </div>
             </div>

@@ -8,7 +8,8 @@ import RegisterPage from "./Pages/register.jsx";
 import {Toaster} from "react-hot-toast";
 import ScrollToTop from "./components/ScrollToTop";
 import ForgetPasswordPage from "./Pages/forgetPassword.jsx";
-import {GoogleOAuthProvider} from "@react-oauth/google";   // ✅ import
+import {GoogleOAuthProvider} from "@react-oauth/google";
+import PaymentPage from "./Pages/client/PaymentPage";   // ✅ import
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/*" element={<CR />} />
           {/* Auth routes */}
           <Route path="/login" element={<LoginPage />} />
+           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/signup" element={<RegisterPage />} />
             <Route path="/forget" element={<ForgetPasswordPage />} />
           {/* Admin routes */}
