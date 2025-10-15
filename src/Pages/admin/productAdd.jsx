@@ -204,7 +204,7 @@ export default function AddProductPage() {
                     accept="image/*"
                     className="hidden"
 
-                    required
+                   
 
                     onChange={onPickImages}
                 />
