@@ -1,7 +1,7 @@
 # BuyNest - E-commerce Website Frontend🥬
 
-BuyNest is a modern e-commerce platform designed for selling grocery items. It is built with React and styled using Tailwind CSS to provide a responsive and intuitive shopping experience.
-Backend Repo - ``` https://github.com/SandaruDulneth/BuyNest-Frontend ```
+BuyNest is a modern e-commerce platform designed for selling grocery items. It is built with React and styled using Tailwind CSS to provide a responsive and intuitive shopping experience.<br>
+Backend Repo - ``` https://github.com/SandaruDulneth/BuyNest-Backend ```
 ## Features
 
 - Responsive Design: Built using Tailwind CSS to ensure the website adjusts seamlessly across various screen sizes.
