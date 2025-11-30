@@ -1,12 +1,77 @@
-# React + Vite
+# BuyNest - E-commerce Website Frontend🥬
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BuyNest is a modern e-commerce platform designed for selling grocery items. It is built with React and styled using Tailwind CSS to provide a responsive and intuitive shopping experience.
+Backend Repo - ```bash https://github.com/SandaruDulneth/BuyNest-Frontend ```
+## Features
 
-Currently, two official plugins are available:
+- Responsive Design: Built using Tailwind CSS to ensure the website adjusts seamlessly across various screen sizes.
+- Product Listings: Showcase a variety of cosmetic products with dynamic product cards.
+- Cart Functionality: Add products to the shopping cart and proceed to checkout with ease.
+- Smooth UI: Fast and lightweight user interface with React and Tailwind CSS. Animation controls with `framer-motion`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Installation
 
-## Expanding the ESLint configuration
+To set up the project locally, follow these steps:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Frontend Setup🪃
+### Clone the Repository
+
+```bash
+git clone https://github.com/SandaruDulneth/BuyNest-Frontend
+cd elora-buynest
+```
+
+### Install dependencies
+```bash
+npm install
+```
+
+### Start development server
+```bash
+npm run dev
+```
+### Set up Environment Variables
+Create a .env file in the root of the elora-frontend directory and configure the necessary environment variables <br>
+```bash
+VITE_BACKEND_URL 
+VITE_GOOGLE_MAPS_API_KEY
+```
+
+## Backend Setup🔧
+The backend for this project is hosted in a separate repository. Follow these steps to set up the backend API server:
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/SandaruDulneth/BuyNest-Backend
+cd buynest-backend
+```
+
+### Install dependencies
+```bash
+npm install
+```
+
+### Start development server
+```bash
+npm start
+```
+
+### Set up Environment Variables
+Create a .env file in the root of the buynest-backend directory and configure the necessary environment variables <br>
+```bash
+STRIPE_SECRET_KEY
+TWILIO_PHONE_NUMBER
+TWILIO_AUTH_TOKEN 
+TWILIO_ACCOUNT_SID
+GOOGLE_MAPS_API_KEY
+BACKENDURL
+FRONTENDURL
+JWTKEY
+MONGODB_URL
+SENDGRID_FROM
+MAIL_PASS
+MAIL_USER
+```
+### License
+MIT License
